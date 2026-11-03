@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aufmaß">
+<meta name="theme-color" content="#1565c0">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Aufmaß</title>
+<style>
+body{font-family:-apple-system,Arial,sans-serif;margin:auto;padding:12px;padding-top:max(12px,env(safe-area-inset-top));max-width:900px;color:#222;background:#fff}
+h1{font-size:1.4em;margin:.3em 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+label{font-size:.85em;color:#555}
+input,button{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:1px solid #bbb;border-radius:6px;-webkit-appearance:none;background:#fff;color:#222}
+button{background:#1565c0;color:#fff;border:none;cursor:pointer;margin-top:4px}
+button.sec{background:#777}button.or{background:#ef6c00}button.del{background:#c62828;width:auto;padding:6px 10px;margin:0}
+.box{border:1px solid #ddd;border-radius:8px;padding:10px;margin:10px 0}
+#treffer{max-height:220px;overflow-y:auto;border:1px solid #ddd;border-radius:6px;margin-top:6px;-webkit-overflow-scrolling:touch}
+.opt{padding:10px;border-bottom:1px solid #eee;cursor:pointer}.opt.sel{background:#1565c0;color:#fff}.opt.leer{color:#888;cursor:default}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th,td{border:1px solid #ccc;padding:6px;text-align:left;font-size:.9em}th{background:#eee}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}td.m{white-space:nowrap}.bem{display:block;font-size:.85em;color:#666}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
+.tabs{display:flex;gap:6px}.tabs button{background:#ccc;color:#222}.tabs button.akt{background:#1565c0;color:#fff}
+.chk{display:flex;align-items:center;gap:8px;margin-top:8px}.chk input{width:auto}
+.info{font-size:.85em;color:#555;margin:4px 0}
+.hinweis{background:#fff3e0;border:1px solid #ffcc80;border-radius:6px;padding:8px;font-size:.9em}
+#fileIn{display:none}
+</style></head><body>
+<h1>Aufmaß</h1>
+<div class="box grid">
+<div><label>Datum</label><input type="date" id="datum"></div>
+<div><label>Kunde</label><input id="kunde" placeholder="Name / Adresse"></div>
+<div><label>Auftrag / Baustelle</label><input id="auftrag"></div>
+<div><label>Aufgenommen von</label><input id="person"></div>
+</div>
+<div class="tabs"><button id="t1" class="akt" onclick="tab(1)">Aus Katalog</button><button id="t2" onclick="tab(2)">Sonstiges</button><button id="t3" onclick="tab(3)">Katalog</button></div>
+
+<div id="p1" class="box">
+<div id="keinKat" class="hinweis" style="display:none">Noch kein Materialkatalog geladen. Tippe oben auf <b>„Katalog“</b> und importiere eure CSV-Datei.</div>
+<label>Material suchen</label>
+<input id="suche" placeholder="z.B. Rohr, Kabel, Fliese ..." autocomplete="off">
+<div id="treffer"></div>
+<div class="row" style="margin-top:8px">
+<div><label>Menge</label><input id="menge" type="text" inputmode="decimal"></div>
+<div><label>Einheit</label><input id="einheit" readonly></div>
+<div style="flex:2"><label>Bemerkung / Ort</label><input id="bem" placeholder="z.B. Bad OG"></div>
+</div>
+<button onclick="hinzu()">+ Hinzufügen</button>
+</div>
+
+<div id="p2" class="box" style="display:none">
+<label>Bezeichnung (frei)</label><input id="sName" placeholder="z.B. Sonderanfertigung Edelstahlblende">
+<div class="row" style="margin-top:8px">
+<div><label>Menge</label><input id="sMenge" type="text" inputmode="decimal"></div>
+<div><label>Einheit</label><input id="sEinheit" placeholder="Stk, m, m², Std ..." list="einh"></div>
+<div style="flex:2"><label>Bemerkung / Ort</label><input id="sBem"></div>
+</div>
+<datalist id="einh"><option>Stk</option><option>m</option><option>m²</option><option>m³</option><option>Std</option><option>kg</option><option>l</option><option>Pauschal</option></datalist>
+<label class="chk"><input type="checkbox" id="sKat"> Dauerhaft als eigenes Material merken (nur auf diesem Gerät)</label>
+<button class="or" onclick="sonst()">+ Sonstiges hinzufügen</button>
+</div>
+
+<div id="p3" class="box" style="display:none">
+<div id="katInfo" class="info"></div>
+<input type="file" id="fileIn">
+<button onclick="document.getElementById('fileIn').click()">Katalog importieren (CSV-Datei wählen)</button>
+<p class="info">Die Datei wird nur auf diesem Gerät gelesen und gespeichert, nichts wird hochgeladen. Ein neuer Import ersetzt den alten Katalog.<br>Aufbau der CSV: <code>Artikelnummer;Bezeichnung;Einheit</code></p>
+<div id="eigInfo" class="info"></div>
+<button class="sec" onclick="eigeneLoeschen()">Eigene Materialien löschen</button>
+<button class="sec" onclick="katalogLoeschen()">Katalog vom Gerät löschen</button>
+</div>
+
+<div class="tw"><table><thead><tr><th>Pos.</th><th>Art.-Nr.</th><th>Material / Leistung</th><th>Menge</th><th></th></tr></thead><tbody id="liste"></tbody></table></div>
+<div class="row" style="margin-top:12px">
+<button onclick="pdf()">PDF erstellen</button>
+<button class="sec" onclick="neu()">Neues Aufmaß</button>
+</div>
+<p class="info" id="ver" style="margin-top:20px;text-align:center"></p>
+
+<script src="jspdf.min.js"></script>
+<script src="jspdf.autotable.min.js"></script>
+<script>
+const VERSION="1.0";
+const $=id=>document.getElementById(id);
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+          set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Speichern auf dem Gerät nicht möglich.")}}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+let katalog=ls.get("am_katalog",[]), katMeta=ls.get("am_katmeta",null), eigene=ls.get("am_eigene",[]);
+let daten=ls.get("aufmass",[]), gewaehlt=null, treffer=[];
+const alle=()=>katalog.concat(eigene);
+
+["datum","kunde","auftrag","person"].forEach(f=>{$(f).value=ls.get("am_"+f,"");$(f).oninput=()=>ls.set("am_"+f,$(f).value)});
+if(!$("datum").value)$("datum").value=new Date().toISOString().slice(0,10);
+
+function tab(n){[1,2,3].forEach(i=>{$("p"+i).style.display=i==n?"":"none";$("t"+i).className=i==n?"akt":""})}
+
+function filtern(){
+  const q=$("suche").value.toLowerCase().trim();
+  $("keinKat").style.display=alle().length?"none":"";
+  treffer=alle().filter(k=>(k[0]+" "+k[1]).toLowerCase().includes(q)).slice(0,200);
+  $("treffer").innerHTML=treffer.map((k,i)=>`<div class="opt${gewaehlt&&gewaehlt[0]==k[0]&&gewaehlt[1]==k[1]?" sel":""}" data-i="${i}">${esc(k[0])} – ${esc(k[1])} (${esc(k[2])})</div>`).join("")
+    ||'<div class="opt leer">Nichts gefunden – nutze „Sonstiges“</div>';
+}
+$("treffer").onclick=e=>{const el=e.target.closest(".opt[data-i]");if(!el)return;gewaehlt=treffer[+el.dataset.i];$("einheit").value=gewaehlt[2];filtern();$("menge").focus()};
+$("suche").oninput=filtern;
+
+const zahl=v=>parseFloat(String(v).replace(/\s/g,"").replace(",","."));
+function hinzu(){
+  const m=zahl($("menge").value);
+  if(!gewaehlt)return alert("Bitte ein Material antippen");
+  if(!(m>0))return alert("Bitte eine Menge eingeben");
+  daten.push({nr:gewaehlt[0],name:gewaehlt[1],einheit:gewaehlt[2],menge:m,bem:$("bem").value.trim()});
+  $("menge").value="";$("bem").value="";speichern();zeigen();
+}
+function sonst(){
+  const n=$("sName").value.trim(),m=zahl($("sMenge").value),e=$("sEinheit").value.trim()||"Stk";
+  if(!n)return alert("Bitte eine Bezeichnung eingeben");
+  if(!(m>0))return alert("Bitte eine Menge eingeben");
+  let nr="–";
+  if($("sKat").checked){nr="E"+String(eigene.length+1).padStart(3,"0");eigene.push([nr,n,e]);ls.set("am_eigene",eigene);katInfo();filtern()}
+  daten.push({nr,name:n,einheit:e,menge:m,bem:$("sBem").value.trim()});
+  ["sName","sMenge","sEinheit","sBem"].forEach(f=>$(f).value="");$("sKat").checked=false;speichern();zeigen();
+}
+function speichern(){ls.set("aufmass",daten)}
+const fmt=n=>n.toLocaleString("de-DE",{maximumFractionDigits:3});
+function zeigen(){
+  $("liste").innerHTML=daten.map((d,i)=>`<tr><td>${i+1}</td><td>${esc(d.nr)}</td><td>${esc(d.name)}${d.bem?`<span class="bem">${esc(d.bem)}</span>`:""}</td><td class="m">${fmt(d.menge)} ${esc(d.einheit)}</td><td><button class="del" data-i="${i}">✕</button></td></tr>`).join("");
+}
+$("liste").onclick=e=>{const b=e.target.closest("button.del");if(!b)return;daten.splice(+b.dataset.i,1);speichern();zeigen()};
+function neu(){if(!daten.length||confirm("Aktuelle Liste und Kundendaten leeren?")){daten=[];speichern();zeigen();["kunde","auftrag"].forEach(f=>{$(f).value="";ls.set("am_"+f,"")})}}
+
+// ---------- CSV-Import ----------
+function decode(buf){
+  try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(e){return new TextDecoder("windows-1252").decode(buf)}
+}
+function parseCSV(text){
+  text=text.replace(/^﻿/,"");
+  const erste=text.split(/\r?\n/).find(l=>l.trim())||"";
+  const sep=(erste.split(";").length>=erste.split(",").length)?";":",";
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c=='"'){if(text[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c=='"')q=true;
+    else if(c==sep){row.push(f);f=""}
+    else if(c=="\n"||c=="\r"){if(c=="\r"&&text[i+1]=="\n")i++;row.push(f);rows.push(row);row=[];f=""}
+    else f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}
+  return rows.map(r=>r.map(x=>x.trim())).filter(r=>r.some(x=>x));
+}
+$("fileIn").onchange=async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{
+    let rows=parseCSV(decode(await file.arrayBuffer()));
+    if(rows.length&&/art|nr|nummer/i.test(rows[0][0])&&/bez|name|material/i.test(rows[0][1]||""))rows.shift();
+    const neuKat=rows.filter(r=>r[1]).map(r=>[r[0]||"",r[1],r[2]||"Stk"]);
+    if(!neuKat.length)return alert("In der Datei wurden keine Materialien gefunden. Aufbau: Artikelnummer;Bezeichnung;Einheit");
+    katalog=neuKat;katMeta={datei:file.name,datum:new Date().toLocaleString("de-DE"),anzahl:neuKat.length};
+    ls.set("am_katalog",katalog);ls.set("am_katmeta",katMeta);gewaehlt=null;
+    katInfo();filtern();alert(neuKat.length+" Materialien importiert.");tab(1);
+  }catch(err){alert("Datei konnte nicht gelesen werden: "+err.message)}
+  e.target.value="";
+};
+function katInfo(){
+  $("katInfo").innerHTML=katMeta?`<b>Aktueller Katalog:</b> ${esc(katMeta.datei)}<br>${katMeta.anzahl} Materialien, importiert am ${esc(katMeta.datum)}`:"<b>Noch kein Katalog importiert.</b>";
+  $("eigInfo").textContent="Eigene Materialien auf diesem Gerät: "+eigene.length;
+}
+function katalogLoeschen(){if(confirm("Katalog von diesem Gerät löschen?")){katalog=[];katMeta=null;ls.set("am_katalog",[]);ls.set("am_katmeta",null);gewaehlt=null;katInfo();filtern()}}
+function eigeneLoeschen(){if(confirm("Alle eigenen Materialien löschen?")){eigene=[];ls.set("am_eigene",[]);katInfo();filtern()}}
+
+// ---------- PDF ----------
+async function pdf(){
+  if(!daten.length)return alert("Die Liste ist noch leer.");
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
+  const d=$("datum").value?new Date($("datum").value+"T12:00").toLocaleDateString("de-DE"):"";
+  doc.setFontSize(18);doc.text("Aufmaß",14,18);
+  doc.setFontSize(10);
+  const kopf=[["Datum",d],["Kunde",$("kunde").value],["Auftrag / Baustelle",$("auftrag").value],["Aufgenommen von",$("person").value]];
+  let y=28;kopf.forEach(([k,v])=>{doc.setFont(undefined,"bold");doc.text(k+":",14,y);doc.setFont(undefined,"normal");doc.text(doc.splitTextToSize(v||"",140),55,y);y+=6});
+  doc.autoTable({startY:y+2,head:[["Pos.","Art.-Nr.","Material / Leistung","Menge","Einheit","Bemerkung"]],
+    body:daten.map((x,i)=>[i+1,x.nr,x.name,fmt(x.menge),x.einheit,x.bem||""]),
+    styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:[21,101,192]},columnStyles:{0:{cellWidth:11},3:{halign:"right"}}});
+  let ey=doc.lastAutoTable.finalY+25;if(ey>270){doc.addPage();ey=40}
+  doc.line(14,ey,90,ey);doc.line(115,ey,196,ey);doc.setFontSize(9);doc.text("Ort, Datum",14,ey+5);doc.text("Unterschrift Kunde",115,ey+5);
+  const name=("Aufmass_"+($("kunde").value||"Kunde")+"_"+($("datum").value||"")).replace(/[^\wäöüÄÖÜß-]+/g,"_")+".pdf";
+  const blob=doc.output("blob");const file=new File([blob],name,{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:name})}catch(e){if(e.name!=="AbortError")laden(blob,name)}
+  }else laden(blob,name);
+}
+function laden(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
+
+$("ver").textContent="Version "+VERSION+" · Daten bleiben nur auf diesem Gerät";
+katInfo();filtern();zeigen();
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
