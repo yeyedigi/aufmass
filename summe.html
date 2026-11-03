@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aufmaß">
+<meta name="theme-color" content="#16325c">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Abschlussaufmaß</title>
+<style>
+:root{--blau:#16325c;--blau2:#0f2747;--gelb:#f5b82e;--gelb-hell:#fff8e6;--bg:#f3f5f9;--text:#1a2233;--muted:#5b6577;--linie:#d5dbe5;--rot:#b3261e}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+button{font-family:inherit;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+
+.bar{background:var(--blau);color:#fff;padding-top:env(safe-area-inset-top)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 20px 64px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:8px;height:26px;border-radius:4px;background:var(--gelb);flex:none}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.navlink{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+@media (hover:hover){.navlink:hover{background:rgba(255,255,255,.2)}}
+
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 1px 3px rgba(16,32,64,.06)}
+.kopf{position:relative;margin-top:-44px;padding:18px 16px 16px;border-top:4px solid var(--gelb);box-shadow:0 6px 20px rgba(16,32,64,.10)}
+.kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.sec{font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--muted);text-transform:uppercase}
+.hint{font-size:11px;color:var(--muted);text-align:right}
+.kgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.s2{grid-column:span 2}.sall{grid-column:1/-1}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.01em}
+.in{display:block;width:100%;height:46px;border:1px solid var(--linie);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;font-weight:500;color:var(--text);background:#fff;-webkit-appearance:none;appearance:none;margin:0}
+input[type=date].in{line-height:44px;min-width:0}
+input[type=date].in::-webkit-date-and-time-value{text-align:left}
+textarea.in{height:84px;padding:12px 14px;resize:vertical;line-height:1.4}
+.in::placeholder{color:#8a93a3;font-weight:400}
+.in:focus{outline:none;border-color:var(--blau);box-shadow:0 0 0 3px rgba(245,184,46,.55)}
+.in[readonly]{background:var(--bg);color:var(--muted)}
+
+.btn{width:100%;min-height:50px;border:0;border-radius:12px;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:8px 12px;text-align:center}
+.btn:active{transform:scale(.99);filter:brightness(.95)}
+.btn-blau{background:var(--blau);color:#fff}
+.btn-gelb{background:var(--gelb);color:var(--text);font-weight:700}
+.btn-hell{background:#e4e9f1;color:var(--text)}
+.btn-rot{background:#fff;border:1.5px solid #e2b4b0;color:var(--rot)}
+.btn.zwei{flex-direction:column;gap:2px}
+.btn small{font-size:12px;font-weight:500}
+@media (hover:hover){.btn-blau:hover{background:var(--blau2)}.btn-gelb:hover{filter:brightness(.96)}.btn-hell:hover{background:#d9e0ea}.btn-rot:hover{background:#fdf3f2}}
+.mt14{margin-top:14px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+
+/* Import */
+.drop{border:2px dashed var(--linie);border-radius:14px;padding:18px 14px;text-align:center;color:var(--muted);font-size:14px;line-height:1.45}
+.drop.ueber{border-color:var(--gelb);background:var(--gelb-hell);color:var(--text)}
+.drop b{color:var(--text)}
+#fDateien,#fOrdner{display:none}
+.meldung{margin-top:12px;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45}
+.meldung.ok{background:#eaf5ee;border:1px solid #b9dfc6}
+.meldung.warn{background:var(--gelb-hell);border:1px solid var(--gelb)}
+.meldung.fehler{background:#fdecea;border:1px solid #f1c9c5}
+.meldung:empty{display:none}
+
+/* Übersicht Einzelaufmaße */
+.h2zeile{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 4px 10px}
+h2{margin:0;font-size:18px;font-weight:700}
+.chip{font-size:12px;font-weight:600;color:#3a4456;background:#e4e9f1;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.liste{padding:0;overflow:hidden}
+.am{padding:12px 16px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #eef1f5}
+.liste>.am:last-child{border-bottom:0}
+.am.abw{background:#fff6f5;box-shadow:inset 4px 0 0 #e57373}
+.am .t{flex:1;min-width:0}
+.am .z1{font-size:15px;font-weight:600}
+.am .z2,.am .z3{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.am .z3{font-style:italic}
+.am .warn{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--rot)}
+.del{width:40px;height:40px;border:0;border-radius:10px;background:#fdecea;color:#c62828;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+@media (hover:hover){.del:hover{background:#f9d7d3}}
+.leer{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
+
+/* Ergebnis */
+.grp{padding:10px 16px;background:#f7f8fb;display:flex;align-items:center;gap:8px;border-bottom:1px solid #eef1f5}
+.grp b{width:6px;height:14px;border-radius:3px;background:var(--gelb)}
+.grp .sec{color:var(--text)}
+.grp .n{font-size:12px;color:var(--muted)}
+.pos{padding:12px 16px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #eef1f5}
+.pos .t{flex:1;min-width:0}
+.pos .o{font-size:12px;color:var(--muted)}
+.pos .b{font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.pos .auf{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45;overflow-wrap:anywhere}
+.pos .m{font-size:15px;font-weight:700;white-space:nowrap;padding-top:14px}
+.summe{padding:10px 16px;background:#eef2f8;font-size:13px;border-bottom:1px solid #e1e6ee}
+.summe span{font-weight:700}
+.enr{background:var(--gelb);color:var(--text);font-weight:700;padding:1px 6px;border-radius:5px}
+.schalter{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.schalter input{width:20px;height:20px;margin:0;accent-color:var(--blau)}
+.aktionen{margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.aktionen .btn{min-height:54px}
+.foot{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+
+@media (min-width:700px){.kgrid{grid-template-columns:repeat(4,minmax(0,1fr))}textarea.in{height:46px;min-height:46px}}
+@media (min-width:900px){
+  .bar .wrap{padding:26px 24px 72px}
+  h1{font-size:28px}
+  .kopf{padding:20px 22px 22px}
+  .kgrid{gap:14px}
+  .layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:24px;align-items:start}
+  .rechts{position:sticky;top:16px}
+  #ergebnis{max-height:calc(100vh - 270px);min-height:160px;overflow-y:auto}
+}
+</style></head><body>
+<header class="bar"><div class="wrap">
+  <div class="brand"><span class="mark"></span><h1>Abschlussaufmaß</h1></div>
+  <a class="navlink" href="index.html"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Aufmaß</a>
+</div></header>
+<main class="wrap">
+
+<section class="card kopf" aria-label="Daten des Abschlussaufmaßes">
+  <div class="kopfzeile"><span class="sec">Abschlussdaten</span><span class="hint">wird aus den Aufmaßen vorausgefüllt</span></div>
+  <div class="kgrid">
+    <div class="s2"><label class="lbl" for="abKunde">Kunde</label><input class="in" id="abKunde"></div>
+    <div class="s2"><label class="lbl" for="abAuftrag">Auftrag / Baustelle</label><input class="in" id="abAuftrag"></div>
+    <div><label class="lbl" for="abNr">Auftragsnr.</label><input class="in" id="abNr" placeholder="optional"></div>
+    <div><label class="lbl" for="abDatum">Erstellt am</label><input class="in" type="date" id="abDatum"></div>
+    <div class="s2"><label class="lbl" for="abZeit">Zeitraum (aus den Aufmaßen)</label><input class="in" id="abZeit" readonly></div>
+    <div class="s2"><label class="lbl" for="abVon">Erstellt von</label><input class="in" id="abVon"></div>
+    <div class="s2"><label class="lbl" for="abBem">Bemerkung zum Abschlussaufmaß</label><textarea class="in" id="abBem" placeholder="optional"></textarea></div>
+  </div>
+</section>
+
+<div class="layout">
+<div class="links">
+  <div class="h2zeile"><h2>Aufmaße einlesen</h2></div>
+  <section class="card">
+    <div class="drop" id="drop"><b>JSON-Dateien der Aufmaße</b> auswählen<span id="dropPC"> – oder hierher ziehen</span>.<br>Gelesen wird nur auf diesem Gerät, nichts wird hochgeladen.</div>
+    <input type="file" id="fDateien" multiple accept=".json,application/json">
+    <input type="file" id="fOrdner" webkitdirectory multiple>
+    <div class="g2 mt14" id="importBtns">
+      <button class="btn btn-blau" onclick="document.getElementById('fDateien').click()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5M5 20h14"/></svg>Dateien wählen</button>
+      <button class="btn btn-hell" id="btnOrdner" onclick="document.getElementById('fOrdner').click()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Ordner wählen</button>
+    </div>
+    <div class="meldung" id="meldung"></div>
+  </section>
+
+  <div class="h2zeile"><h2>Eingelesene Aufmaße</h2><span class="chip" id="anzAm">0 Aufmaße</span></div>
+  <div class="meldung warn" id="abwHinweis"></div>
+  <section class="card liste" id="amListe" style="margin-top:10px"></section>
+</div>
+
+<div class="rechts">
+  <div class="h2zeile"><h2>Zusammenfassung</h2>
+    <label class="schalter" for="aufschl"><input type="checkbox" id="aufschl" checked>Aufschlüsselung nach Tagen</label>
+  </div>
+  <section class="card liste" id="ergebnis"></section>
+  <div class="aktionen">
+    <button class="btn btn-blau" onclick="erstellen(false)">PDF erstellen</button>
+    <button class="btn btn-gelb" onclick="erstellen(true)">PDF + JSON erstellen</button>
+    <button class="btn btn-rot zwei sall" onclick="neu()">Neues Abschlussaufmaß<small>(eingelesene Aufmaße werden entfernt)</small></button>
+  </div>
+</div>
+</div>
+
+<p class="foot" id="ver"></p>
+</main>
+
+<script src="jspdf.min.js"></script>
+<script src="jspdf.autotable.min.js"></script>
+<script>
+const VERSION="1.4";
+const KATS=["Material","Stunden","Sonstiges"];
+const $=id=>document.getElementById(id);
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+          set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Speichern auf dem Gerät nicht möglich.")}}};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const istENr=nr=>/^E\d+$/i.test(String(nr));
+const nrHtml=nr=>istENr(nr)?`<span class="enr">${esc(nr)}</span>`:esc(nr);
+const heute=()=>new Date().toISOString().slice(0,10);
+const datumDE=iso=>iso?new Date(iso+"T12:00").toLocaleDateString("de-DE"):"";
+const datumKurz=iso=>{if(!iso)return "";const [j,m,t]=iso.split("-");return (+t)+"."+(+m)+".";};
+const fmt=n=>(+n).toLocaleString("de-DE",{maximumFractionDigits:3});
+const rund=n=>Math.round(n*1000)/1000;
+const norm=s=>String(s||"").toLowerCase().replace(/\s+/g," ").trim();
+const ICON_DEL='<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
+const istHandy=()=>matchMedia("(pointer:coarse)").matches||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+
+// Kategorien wie in der App
+function katVonEinheit(e){
+  e=String(e||"").toLowerCase().replace(/\./g,"").trim();
+  if(/^(std|h|stunde|stunden|std\/mann|mannstunde|mannstunden)$/.test(e))return "Stunden";
+  if(/^(pauschal|pauschale|psch|pausch|pa)$/.test(e))return "Sonstiges";
+  return "Material";
+}
+function normKat(k){k=String(k||"").toLowerCase().trim();if(k.startsWith("mat"))return "Material";if(/^(std|stund|lohn|arbeit)/.test(k))return "Stunden";if(k.startsWith("sons"))return "Sonstiges";return ""}
+const katVon=(kat,einheit)=>normKat(kat)||katVonEinheit(einheit);
+const rang=nr=>!nr?2:istENr(nr)?1:0;
+
+// ---------- Zustand ----------
+let aufmasse=ls.get("sum_aufmasse",[]);
+const FELDER=["abKunde","abNr","abAuftrag","abDatum","abVon","abBem"];
+let vonHand=ls.get("sum_vonhand",{});
+FELDER.forEach(f=>{$(f).value=ls.get("sum_"+f,"");$(f).oninput=()=>{vonHand[f]=true;ls.set("sum_vonhand",vonHand);ls.set("sum_"+f,$(f).value)}});
+if(!$("abDatum").value){$("abDatum").value=heute();ls.set("sum_abDatum",$("abDatum").value)}
+$("aufschl").checked=ls.get("sum_aufschl",true);
+$("aufschl").onchange=()=>{ls.set("sum_aufschl",$("aufschl").checked);zeigeErgebnis()};
+function speichern(){ls.set("sum_aufmasse",aufmasse)}
+
+// ---------- Einlesen ----------
+function pruefe(j){
+  if(!j||j.format!=="aufmass"||!Array.isArray(j.positionen)||!j.kopf)return "keine Aufmaß-Datei";
+  return "";
+}
+function bereinige(j,dateiname){
+  const k=j.kopf||{};
+  return {
+    id:String(j.id||dateiname+"_"+(k.datum||"")),datei:dateiname,
+    datum:String(k.datum||""),kunde:String(k.kunde||""),auftragsnummer:String(k.auftragsnummer||""),
+    auftrag:String(k.auftrag||""),aufgenommenVon:String(k.aufgenommenVon||""),notizen:String(k.notizen||""),
+    positionen:j.positionen.filter(p=>p&&p.bezeichnung&&isFinite(+p.menge)).map(p=>({
+      artikelnummer:String(p.artikelnummer||""),bezeichnung:String(p.bezeichnung),menge:+p.menge,
+      einheit:String(p.einheit||"Stk"),kategorie:katVon(p.kategorie,p.einheit),bemerkung:String(p.bemerkung||"")}))
+  };
+}
+async function einlesen(fileList){
+  const files=[...fileList].filter(f=>/\.json$/i.test(f.name));
+  const ignoriert=fileList.length-files.length;
+  let neu=0;const doppelt=[],kaputt=[];
+  for(const f of files){
+    try{
+      const j=JSON.parse(await f.text());const fehler=pruefe(j);
+      if(fehler){kaputt.push(f.name);continue}
+      const a=bereinige(j,f.name);
+      if(aufmasse.some(x=>x.id===a.id)){doppelt.push(f.name);continue}
+      aufmasse.push(a);neu++;
+    }catch(e){kaputt.push(f.name)}
+  }
+  aufmasse.sort((a,b)=>a.datum.localeCompare(b.datum)||a.aufgenommenVon.localeCompare(b.aufgenommenVon,"de"));
+  speichern();alles();
+  const m=$("meldung");const teile=[];
+  if(neu)teile.push(`<b>${neu} Aufmaß${neu==1?"":"e"} eingelesen.</b>`);
+  if(doppelt.length)teile.push(`${doppelt.length} bereits vorhanden und übersprungen: ${doppelt.map(esc).join(", ")}`);
+  if(kaputt.length)teile.push(`${kaputt.length} Datei${kaputt.length==1?"":"en"} konnte${kaputt.length==1?"":"n"} nicht gelesen werden (keine Aufmaß-JSON): ${kaputt.map(esc).join(", ")}`);
+  if(ignoriert>0&&!files.length)teile.push("Keine JSON-Dateien gefunden.");
+  m.className="meldung "+(kaputt.length||(!neu&&!doppelt.length)?"fehler":doppelt.length?"warn":"ok");
+  m.innerHTML=teile.join("<br>");
+}
+$("fDateien").onchange=e=>{einlesen(e.target.files);e.target.value=""};
+$("fOrdner").onchange=e=>{einlesen(e.target.files);e.target.value=""};
+// Ordner-Auswahl und Ziehen nur am PC (iPhone kann das nicht)
+if(istHandy()){$("btnOrdner").style.display="none";$("dropPC").style.display="none";$("importBtns").style.gridTemplateColumns="1fr"}
+const drop=$("drop");
+["dragenter","dragover"].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("ueber")}));
+["dragleave","drop"].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();if(ev==="drop"||!e.relatedTarget)drop.classList.remove("ueber")}));
+document.addEventListener("drop",e=>{if(e.dataTransfer&&e.dataTransfer.files.length)einlesen(e.dataTransfer.files)});
+drop.onclick=()=>$("fDateien").click();drop.style.cursor="pointer";
+
+// ---------- Auswertung ----------
+// Bezug: wenn alle eine Auftragsnummer haben -> danach, sonst Kunde + Auftrag. Häufigster Wert gilt als "richtig".
+function bezug(){
+  const mitNr=aufmasse.length&&aufmasse.every(a=>a.auftragsnummer);
+  const key=a=>mitNr?norm(a.auftragsnummer):norm(a.kunde)+"|"+norm(a.auftrag);
+  const zaehl={};aufmasse.forEach(a=>{zaehl[key(a)]=(zaehl[key(a)]||0)+1});
+  const ref=Object.keys(zaehl).sort((x,y)=>zaehl[y]-zaehl[x])[0];
+  const refA=aufmasse.find(a=>key(a)===ref);
+  return {abw:new Set(aufmasse.filter(a=>key(a)!==ref).map(a=>a.id)),refA,mitNr};
+}
+function label(a){
+  const gleicherTag=aufmasse.filter(x=>x.datum===a.datum).length>1;
+  return datumKurz(a.datum)+(gleicherTag&&a.aufgenommenVon?" "+a.aufgenommenVon:"");
+}
+function zusammenfassen(){
+  const map=new Map();
+  aufmasse.forEach(a=>a.positionen.forEach(p=>{
+    const key=(p.artikelnummer?"nr:"+norm(p.artikelnummer):"txt:"+norm(p.bezeichnung))+"|"+norm(p.einheit);
+    if(!map.has(key))map.set(key,{artikelnummer:p.artikelnummer,bezeichnung:p.bezeichnung,einheit:p.einheit,kategorie:p.kategorie,menge:0,teile:new Map()});
+    const e=map.get(key);e.menge=rund(e.menge+p.menge);
+    if(!e.teile.has(a.id))e.teile.set(a.id,{aufmassId:a.id,datum:a.datum,label:label(a),menge:0,bem:[]});
+    const t=e.teile.get(a.id);t.menge=rund(t.menge+p.menge);if(p.bemerkung&&!t.bem.includes(p.bemerkung))t.bem.push(p.bemerkung);
+  }));
+  const liste=[...map.values()].map(e=>({...e,teile:[...e.teile.values()].sort((x,y)=>x.datum.localeCompare(y.datum))}));
+  liste.sort((a,b)=>KATS.indexOf(a.kategorie)-KATS.indexOf(b.kategorie)||rang(a.artikelnummer)-rang(b.artikelnummer)||
+    a.artikelnummer.localeCompare(b.artikelnummer,"de",{numeric:true})||a.bezeichnung.localeCompare(b.bezeichnung,"de"));
+  return KATS.map(k=>{
+    const pos=liste.filter(e=>e.kategorie===k);
+    const summen={};pos.forEach(e=>{summen[e.einheit]=rund((summen[e.einheit]||0)+e.menge)});
+    return {kat:k,pos,summen};
+  }).filter(g=>g.pos.length);
+}
+const teilText=t=>`${t.label}: ${fmt(t.menge)}${t.bem.length?" ("+t.bem.join(", ")+")":""}`;
+const summenText=s=>Object.entries(s).map(([e,m])=>fmt(m)+" "+e).join(" · ");
+function zeitraum(){
+  const d=aufmasse.map(a=>a.datum).filter(Boolean).sort();
+  if(!d.length)return {von:"",bis:"",text:""};
+  return {von:d[0],bis:d[d.length-1],text:d[0]===d[d.length-1]?datumDE(d[0]):datumDE(d[0])+" – "+datumDE(d[d.length-1])};
+}
+
+// ---------- Anzeige ----------
+function zeigeAufmasse(){
+  const {abw}=bezug();
+  $("anzAm").textContent=aufmasse.length==1?"1 Aufmaß":aufmasse.length+" Aufmaße";
+  $("abwHinweis").innerHTML=abw.size?`<b>Bitte prüfen:</b> ${abw.size} Aufmaß${abw.size==1?" gehört":"e gehören"} vielleicht zu einem anderen Kunden oder Auftrag (rot markiert). ${abw.size==1?"Es wird":"Sie werden"} trotzdem mitgezählt, bis du ${abw.size==1?"es":"sie"} entfernst.`:"";
+  $("amListe").innerHTML=aufmasse.length?aufmasse.map((a,i)=>`<div class="am${abw.has(a.id)?" abw":""}"><div class="t">
+      <div class="z1">${esc(datumDE(a.datum))}${a.aufgenommenVon?" · "+esc(a.aufgenommenVon):""}</div>
+      <div class="z2">${esc(a.kunde||"ohne Kunde")}${a.auftragsnummer?" · Nr. "+esc(a.auftragsnummer):""}${a.auftrag?" · "+esc(a.auftrag):""} · ${a.positionen.length} Pos.</div>
+      ${a.notizen?`<div class="z3">„${esc(a.notizen)}“</div>`:""}
+      ${abw.has(a.id)?'<span class="warn">Anderer Kunde / Auftrag?</span>':""}
+    </div><button class="del" data-i="${i}" aria-label="Aufmaß entfernen">${ICON_DEL}</button></div>`).join("")
+    :'<div class="leer">Noch keine Aufmaße eingelesen.</div>';
+}
+$("amListe").onclick=e=>{const b=e.target.closest("button.del");if(!b)return;aufmasse.splice(+b.dataset.i,1);speichern();alles()};
+function zeigeErgebnis(){
+  const gr=zusammenfassen(),auf=$("aufschl").checked;let n=0;
+  $("ergebnis").innerHTML=gr.length?gr.map(g=>`<div class="grp"><b></b><span class="sec">${g.kat}</span><span class="n">${g.pos.length}</span></div>`
+    +g.pos.map(e=>`<div class="pos"><div class="t"><div class="o">${++n}${e.artikelnummer?" · "+nrHtml(e.artikelnummer):""}</div><div class="b">${esc(e.bezeichnung)}</div>${auf?`<div class="auf">${e.teile.map(t=>esc(teilText(t))).join(" · ")}</div>`:""}</div><div class="m">${fmt(e.menge)} ${esc(e.einheit)}</div></div>`).join("")
+    +`<div class="summe">Summe ${g.kat}: <span>${esc(summenText(g.summen))}</span></div>`).join("")
+    :'<div class="leer">Sobald Aufmaße eingelesen sind, erscheint hier die Summe aller Positionen.</div>';
+}
+function kopfAuffuellen(){
+  const {refA}=bezug();const z=zeitraum();
+  $("abZeit").value=z.text;
+  const vor={abKunde:refA?refA.kunde:"",abNr:refA?refA.auftragsnummer:"",abAuftrag:refA?refA.auftrag:""};
+  Object.entries(vor).forEach(([f,v])=>{if(!vonHand[f]){$(f).value=v;ls.set("sum_"+f,v)}});
+}
+function alles(){kopfAuffuellen();zeigeAufmasse();zeigeErgebnis()}
+function neu(){
+  if(aufmasse.length&&!confirm("Alle eingelesenen Aufmaße und die Abschlussdaten entfernen?\n\nHast du das PDF gespeichert? Die JSON-Dateien der Einzelaufmaße bleiben natürlich erhalten."))return;
+  aufmasse=[];speichern();vonHand={};ls.set("sum_vonhand",vonHand);
+  ["abKunde","abNr","abAuftrag","abBem"].forEach(f=>{$(f).value="";ls.set("sum_"+f,"")});
+  $("abDatum").value=heute();ls.set("sum_abDatum",$("abDatum").value);$("meldung").innerHTML="";alles();
+}
+
+// ---------- PDF + JSON ----------
+const BLAU=[22,50,92],GELB=[245,184,46],LINIE=[225,229,236];
+const UML={"ä":"ae","ö":"oe","ü":"ue","Ä":"Ae","Ö":"Oe","Ü":"Ue","ß":"ss"};
+const k=()=>({kunde:$("abKunde").value.trim(),nr:$("abNr").value.trim(),auftrag:$("abAuftrag").value.trim(),datum:$("abDatum").value,von:$("abVon").value.trim(),bem:$("abBem").value.trim()});
+function dateiName(kd){return ("Abschlussaufmass_"+(kd.kunde||"Kunde")+"_"+(kd.datum||"")).replace(/[äöüÄÖÜß]/g,c=>UML[c]).replace(/[^\w-]+/g,"_").replace(/_+/g,"_")}
+
+function bauePDF(kd){
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
+  const {abw}=bezug();const z=zeitraum();const gr=zusammenfassen();const auf=$("aufschl").checked;
+  doc.setFontSize(18);doc.setTextColor(...BLAU);doc.text("Abschlussaufmaß",14,18);doc.setTextColor(0);
+  doc.setDrawColor(...GELB);doc.setLineWidth(1.2);doc.line(14,21,196,21);doc.setDrawColor(0);doc.setLineWidth(0.2);
+  doc.setFontSize(10);
+  const kopf=[["Kunde",kd.kunde]];if(kd.nr)kopf.push(["Auftragsnummer",kd.nr]);
+  kopf.push(["Auftrag / Baustelle",kd.auftrag],["Zeitraum",z.text],["Anzahl Aufmaße",String(aufmasse.length)],["Erstellt am",datumDE(kd.datum)]);
+  if(kd.von)kopf.push(["Erstellt von",kd.von]);if(kd.bem)kopf.push(["Bemerkung",kd.bem]);
+  let y=29;kopf.forEach(([a,v])=>{doc.setFont(undefined,"bold");doc.text(a+":",14,y);doc.setFont(undefined,"normal");const zl=doc.splitTextToSize(v||"",140);doc.text(zl,55,y);y+=5*Math.max(1,zl.length)+1});
+  const folgeKopf=["Abschlussaufmaß",kd.kunde,kd.nr,kd.auftrag,z.text].filter(Boolean).join("  ·  ");
+  const folge=()=>{doc.setFontSize(8);doc.setTextColor(90);doc.text(doc.splitTextToSize(folgeKopf,182)[0],14,12);doc.setDrawColor(...GELB);doc.setLineWidth(0.6);doc.line(14,14,196,14);doc.setDrawColor(0);doc.setLineWidth(0.2);doc.setTextColor(0)};
+  const opts={margin:{top:20,bottom:18},showHead:"everyPage",didDrawPage:d=>{if(d.pageNumber>1)folge()}};
+  const ueberschrift=(t,yy)=>{if(yy>265){doc.addPage();folge();yy=26}doc.setFontSize(12);doc.setFont(undefined,"bold");doc.setTextColor(...BLAU);doc.text(t,14,yy);doc.setTextColor(0);doc.setFont(undefined,"normal");return yy+3};
+
+  // 1. Übersicht der Einzelaufmaße
+  y=ueberschrift("Übersicht der Einzelaufmaße",y+5);
+  doc.autoTable({...opts,startY:y,head:[["Datum","Aufgenommen von","Kunde","Auftrag / Baustelle","Pos."]],
+    body:aufmasse.map(a=>{const st=abw.has(a.id)?{fillColor:[253,236,234]}:{};return [datumDE(a.datum),a.aufgenommenVon,a.kunde+(abw.has(a.id)?"  (abweichend!)":""),[a.auftragsnummer?"Nr. "+a.auftragsnummer:"",a.auftrag].filter(Boolean).join(" · "),a.positionen.length].map(c=>({content:String(c),styles:st}))}),
+    styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:BLAU},columnStyles:{0:{cellWidth:22},4:{cellWidth:12,halign:"right"}}});
+  y=doc.lastAutoTable.finalY;
+
+  // 2. Notizen aus den Einzelaufmaßen
+  const mitNotiz=aufmasse.filter(a=>a.notizen);
+  if(mitNotiz.length){
+    y=ueberschrift("Notizen aus den Einzelaufmaßen",y+10);
+    doc.autoTable({...opts,startY:y,theme:"plain",body:mitNotiz.map(a=>[datumDE(a.datum)+(a.aufgenommenVon?"\n"+a.aufgenommenVon:""),a.notizen]),
+      styles:{fontSize:9,cellPadding:2,lineColor:LINIE,lineWidth:{bottom:0.2}},columnStyles:{0:{cellWidth:30,textColor:90}}});
+    y=doc.lastAutoTable.finalY;
+  }
+
+  // 3. Zusammenfassung
+  y=ueberschrift("Zusammenfassung aller Positionen",y+10);
+  const body=[];let n=0;const linie={bottom:0.2},ohne={bottom:0};
+  gr.forEach(g=>{
+    body.push([{content:g.kat,colSpan:5,styles:{fillColor:[255,248,230],fontStyle:"bold",textColor:20,lineWidth:linie,lineColor:LINIE}}]);
+    g.pos.forEach(e=>{
+      const sub=auf&&e.teile.length;
+      body.push([++n,e.artikelnummer,e.bezeichnung,fmt(e.menge),e.einheit].map((c,i)=>({content:String(c),styles:{lineWidth:sub?ohne:linie,lineColor:LINIE,fontStyle:i==3?"bold":"normal"}})));
+      if(sub)body.push(["","",{content:e.teile.map(teilText).join("  ·  "),colSpan:3,styles:{fontSize:7.5,textColor:100,cellPadding:{top:0,bottom:2,left:2,right:2}}}].map(c=>typeof c==="object"?{...c,styles:{...c.styles,lineWidth:linie,lineColor:LINIE}}:{content:c,styles:{lineWidth:linie,lineColor:LINIE}}));
+    });
+    body.push([{content:"Summe "+g.kat+":  "+summenText(g.summen),colSpan:5,styles:{fillColor:[238,242,248],fontStyle:"bold",lineWidth:linie,lineColor:LINIE}}]);
+  });
+  doc.autoTable({...opts,startY:y,theme:"plain",head:[["Pos.","Art.-Nr.","Material / Leistung","Menge","Einheit"]],body,
+    styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:BLAU,textColor:255,fontStyle:"bold"},columnStyles:{0:{cellWidth:11},1:{cellWidth:24},3:{halign:"right",cellWidth:22},4:{cellWidth:22}}});
+
+  let ey=doc.lastAutoTable.finalY+25;if(ey>272){doc.addPage();ey=40;folge()}
+  doc.setLineWidth(0.2);doc.line(14,ey,90,ey);doc.line(115,ey,196,ey);doc.setFontSize(9);doc.text("Ort, Datum",14,ey+5);doc.text("Unterschrift Kunde",115,ey+5);
+  const seiten=doc.getNumberOfPages();
+  for(let i=1;i<=seiten;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120);doc.text("Seite "+i+" von "+seiten,196,290,{align:"right"});doc.setTextColor(0)}
+  return doc.output("blob");
+}
+function baueJSON(kd){
+  const z=zeitraum(),{abw}=bezug();
+  return JSON.stringify({
+    format:"abschlussaufmass",formatVersion:1,erstelltAm:new Date().toISOString(),appVersion:VERSION,
+    kopf:{kunde:kd.kunde,auftragsnummer:kd.nr,auftrag:kd.auftrag,zeitraumVon:z.von,zeitraumBis:z.bis,datum:kd.datum,erstelltVon:kd.von,bemerkung:kd.bem},
+    aufmasse:aufmasse.map(a=>({id:a.id,datum:a.datum,aufgenommenVon:a.aufgenommenVon,kunde:a.kunde,auftragsnummer:a.auftragsnummer,auftrag:a.auftrag,notizen:a.notizen,anzahlPositionen:a.positionen.length,abweichend:abw.has(a.id)})),
+    positionen:zusammenfassen().flatMap(g=>g.pos.map(e=>({artikelnummer:e.artikelnummer,bezeichnung:e.bezeichnung,menge:e.menge,einheit:e.einheit,kategorie:e.kategorie,
+      aufschluesselung:e.teile.map(t=>({aufmassId:t.aufmassId,datum:t.datum,menge:t.menge,bemerkungen:t.bem}))}))),
+    summenJeKategorie:Object.fromEntries(zusammenfassen().map(g=>[g.kat,g.summen]))
+  },null,2);
+}
+function erstellen(mitJson){
+  if(!aufmasse.length)return alert("Es sind noch keine Aufmaße eingelesen.");
+  const {abw}=bezug();
+  if(abw.size&&!confirm(abw.size+" Aufmaß(e) haben einen anderen Kunden oder Auftrag und werden mitgezählt.\n\nTrotzdem erstellen?"))return;
+  const kd=k(),name=dateiName(kd);
+  const files=[new File([bauePDF(kd)],name+".pdf",{type:"application/pdf"})];
+  if(mitJson)files.push(new File([baueJSON(kd)],name+".json",{type:"application/json"}));
+  teilen(files);
+}
+async function teilen(files){
+  if(istHandy()&&navigator.canShare&&navigator.canShare({files})){
+    try{await navigator.share({files});return}catch(e){if(e.name==="AbortError")return}
+  }
+  files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)},i*400));
+}
+
+$("ver").textContent="Version "+VERSION+" · Daten bleiben nur auf diesem Gerät";
+alles();
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
