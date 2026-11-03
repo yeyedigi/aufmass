@@ -3,124 +3,246 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Aufmaß">
-<meta name="theme-color" content="#1565c0">
+<meta name="theme-color" content="#16325c">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Aufmaß</title>
 <style>
-:root{--blau:#1565c0;--gelb:#fbc02d;--gelb-hell:#fff8e1;--text:#222;--grau:#555}
-body{font-family:-apple-system,Arial,sans-serif;margin:auto;padding:0 12px 12px;max-width:900px;color:var(--text);background:#fff}
-header{background:var(--blau);color:#fff;margin:0 -12px;padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:5px solid var(--gelb)}
-h1{font-size:1.4em;margin:0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
-label{font-size:.85em;color:var(--grau)}
-input:not([type=checkbox]),select,button{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:1px solid #bbb;border-radius:6px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--text);font-family:inherit}
-select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23555' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:32px}
-input:not([type=checkbox]):focus,select:focus{outline:none;border-color:var(--blau);box-shadow:0 0 0 3px var(--gelb)}
-button{background:var(--blau);color:#fff;border:none;cursor:pointer;margin-top:4px}
-button small{display:block;font-size:.75em;opacity:.9}
-button.sec{background:#777}
-button.gelb{background:var(--gelb);color:var(--text);font-weight:600}
-button.del{background:#c62828;width:auto;padding:6px 10px;margin:0}
-.box{border:1px solid #ddd;border-radius:8px;padding:10px;margin:10px 0}
-#treffer{max-height:220px;overflow-y:auto;border:1px solid #ddd;border-radius:6px;margin-top:6px;-webkit-overflow-scrolling:touch}
-.opt{padding:10px;border-bottom:1px solid #eee;border-left:5px solid transparent;cursor:pointer}
-.opt.sel{background:var(--blau);color:#fff;border-left-color:var(--gelb)}
-.opt.leer{color:#888;cursor:default}
-.opt .kat{font-size:.8em;opacity:.7}
-.enr{background:var(--gelb);color:var(--text);border-radius:4px;padding:1px 5px;font-size:.85em;font-weight:600}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;margin-top:8px}
-th,td{border:1px solid #ccc;padding:6px;text-align:left;font-size:.9em}
-th{background:var(--blau);color:#fff;border-color:var(--blau);border-bottom:3px solid var(--gelb)}
-tr.grp td{background:var(--gelb-hell);font-weight:700;border-color:#e6d9a8}
-td.m{white-space:nowrap}
-tr.neu td{animation:blink 1.6s ease-out}
-@keyframes blink{0%,40%{background:var(--gelb)}100%{background:transparent}}
-.bem{display:block;font-size:.85em;color:#666}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
-.tabs{display:flex;gap:6px;margin-top:12px}
-.tabs button{background:#e0e0e0;color:var(--text);border-bottom:4px solid transparent}
-.tabs button.akt{background:var(--blau);color:#fff;border-bottom-color:var(--gelb)}
-.chk{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px;border:1px solid #ddd;border-radius:6px;cursor:pointer;color:var(--text);font-size:.95em}
-.chk.an{background:var(--gelb-hell);border-color:var(--gelb)}
-.chk input{width:24px;height:24px;margin:0;flex:none;accent-color:var(--blau);-webkit-appearance:checkbox;appearance:auto}
-.info{font-size:.85em;color:var(--grau);margin:4px 0}
-.hinweis{background:var(--gelb-hell);border:1px solid var(--gelb);border-radius:6px;padding:8px;font-size:.9em}
-.abschnitt{padding:10px 0;border-bottom:1px solid #eee}.abschnitt:last-child{border-bottom:none}
-.abschnitt p{font-size:.85em;color:var(--grau);margin:6px 0 0}
+:root{--blau:#16325c;--blau2:#0f2747;--gelb:#f5b82e;--gelb-hell:#fff8e6;--bg:#f3f5f9;--text:#1a2233;--muted:#5b6577;--linie:#d5dbe5;--rot:#b3261e}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+button{font-family:inherit;-webkit-tap-highlight-color:transparent}
+
+/* Kopfzeile */
+.bar{background:var(--blau);color:#fff;padding-top:env(safe-area-inset-top)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;padding:22px 20px 64px}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:8px;height:26px;border-radius:4px;background:var(--gelb)}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.vtop{font-size:12px;font-weight:500;opacity:.75}
+
+/* Karten & Grundelemente */
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 1px 3px rgba(16,32,64,.06)}
+.kopf{position:relative;margin-top:-44px;padding:18px 16px 16px;border-top:4px solid var(--gelb);box-shadow:0 6px 20px rgba(16,32,64,.10)}
+.kopfzeile{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec{font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--muted);text-transform:uppercase}
+.hint{font-size:11px;color:var(--muted)}
+.kgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.s2{grid-column:span 2}.sall{grid-column:1/-1}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.01em}
+.in{display:block;width:100%;height:46px;border:1px solid var(--linie);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;font-weight:500;color:var(--text);background:#fff;-webkit-appearance:none;appearance:none;margin:0}
+input[type=date].in{line-height:44px;min-width:0}
+input[type=date].in::-webkit-date-and-time-value{text-align:left}
+textarea.in{height:84px;padding:12px 14px;resize:vertical;line-height:1.4}
+select.in{padding-right:40px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235b6577' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center}
+.in::placeholder{color:#8a93a3;font-weight:400}
+.in:focus{outline:none;border-color:var(--blau);box-shadow:0 0 0 3px rgba(245,184,46,.55)}
+.in[readonly]{background:var(--bg);color:var(--muted)}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+
+/* Buttons */
+.btn{width:100%;min-height:50px;border:0;border-radius:12px;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:8px 12px;text-align:center}
+.btn:active{transform:scale(.99);filter:brightness(.95)}
+.btn-blau{background:var(--blau);color:#fff}
+.btn-gelb{background:var(--gelb);color:var(--text);font-weight:700}
+.btn-rot{background:#fff;border:1.5px solid #e2b4b0;color:var(--rot)}
+.btn.zwei{flex-direction:column;gap:2px}
+.btn small{font-size:12px;font-weight:500}
+@media (hover:hover){.btn-blau:hover{background:var(--blau2)}.btn-gelb:hover{filter:brightness(.96)}.btn-rot:hover{background:#fdf3f2}}
+.mt14{margin-top:14px}
+
+/* Reiter */
+.tabs{margin-top:20px;background:#e4e9f1;border-radius:14px;padding:4px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.tabs button{height:44px;border:0;border-radius:11px;background:transparent;color:#3a4456;font-size:15px;font-weight:600;cursor:pointer}
+.tabs button.akt{background:var(--blau);color:#fff;box-shadow:inset 0 -3px 0 var(--gelb)}
+.panel{margin-top:14px}
+
+/* Suche */
+.suche{position:relative}
+.suche svg{position:absolute;left:14px;top:14px;pointer-events:none}
+.suche .in{padding-left:42px}
+#treffer{margin-top:10px;border:1px solid #e3e7ee;border-radius:12px;overflow-y:auto;max-height:264px;-webkit-overflow-scrolling:touch}
+.opt{padding:12px 14px;border-top:1px solid #eef1f5;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;font-size:15px}
+.opt:first-child{border-top:0}
+.opt .r{font-size:13px;color:var(--muted);white-space:nowrap}
+.opt.sel{background:var(--blau);color:#fff;box-shadow:inset 5px 0 0 var(--gelb);font-weight:600}
+.opt.sel .r{color:#fff;opacity:.8}
+.opt.leer{color:var(--muted);cursor:default}
+@media (hover:hover){.opt:not(.sel):not(.leer):hover{background:#f7f8fb}}
+.enr{background:var(--gelb);color:var(--text);font-weight:700;padding:1px 6px;border-radius:5px}
+.hinweis{background:var(--gelb-hell);border:1px solid var(--gelb);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+
+/* Haken bei Sonstiges */
+.merk{margin-top:14px;display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;border:1.5px solid var(--linie);cursor:pointer}
+.merk.an{background:var(--gelb-hell);border-color:var(--gelb)}
+.merk input{width:24px;height:24px;margin:0;flex:none;accent-color:var(--blau)}
+.merk span{font-size:14px;line-height:1.45}
+
+/* Katalog */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.stat{background:var(--bg);border-radius:12px;padding:12px;min-width:0}
+.stat.gelb{background:var(--gelb-hell)}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font-size:20px;font-weight:700}
+.stat .d{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.desc{margin:8px 2px 0;font-size:13px;line-height:1.5;color:#4a5466}
+.teil+.teil{margin-top:16px}
+.trenner{margin:26px 4px 0;display:flex;align-items:center;gap:12px}
+.trenner i{flex:1;height:2px;background:var(--linie)}
+.trenner .sec{color:var(--rot)}
+.gefahr{margin-top:14px;border:1.5px solid #f1c9c5;box-shadow:none}
+.gefahr .teil+.teil{padding-top:16px;border-top:1px solid #f3dcd9}
 #fileIn{display:none}
+
+/* Aufmaß-Liste */
+.listkopf{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 10px}
+h2{margin:0;font-size:18px;font-weight:700}
+.chip{font-size:12px;font-weight:600;color:#3a4456;background:#e4e9f1;padding:4px 10px;border-radius:999px}
+.liste{padding:0;overflow:hidden}
+.grp{padding:10px 16px;background:#f7f8fb;display:flex;align-items:center;gap:8px;border-bottom:1px solid #eef1f5}
+.grp b{width:6px;height:14px;border-radius:3px;background:var(--gelb)}
+.grp .sec{color:var(--text)}
+.grp .n{font-size:12px;color:var(--muted)}
+.pos{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eef1f5;background:#fff}
+.liste>.pos:last-child{border-bottom:0}
+.pos .t{flex:1;min-width:0}
+.pos .o{font-size:12px;color:var(--muted)}
+.pos .b{font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.pos .bem{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.pos .m{font-size:15px;font-weight:600;white-space:nowrap}
+.del{width:40px;height:40px;border:0;border-radius:10px;background:#fdecea;color:#c62828;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+@media (hover:hover){.del:hover{background:#f9d7d3}}
+.pos.neu{animation:blink 1.8s ease-out}
+@keyframes blink{0%,45%{background:#fff1c7}100%{background:#fff}}
+.leerliste{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
+.aktionen{margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.aktionen .btn{min-height:54px}
+.foot{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+
+/* Reiter Katalog: nur Katalog-Funktionen */
+#p3b{display:none}
+body.kat #p3b{display:block}
+body.kat #aufmass{display:none}
+
+/* Tablet hochkant: Auftragsdaten kompakter */
+@media (min-width:700px){.kgrid{grid-template-columns:repeat(4,minmax(0,1fr))}textarea.in{height:64px}}
+
+/* PC / Tablet quer */
+@media (min-width:900px){
+  .bar .wrap{padding:26px 24px 72px}
+  h1{font-size:28px}
+  .kopf{padding:20px 22px 22px}
+  .kgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  textarea.in{height:64px}
+  .layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:24px;align-items:start}
+  .rechts{position:sticky;top:16px}
+  .listkopf{margin-top:20px;height:52px}
+  .liste{max-height:calc(100vh - 270px);min-height:160px;overflow-y:auto}
+  body.kat .rechts{position:static}
+  body.kat .trenner{margin-top:20px;height:52px}
+}
 </style></head><body>
-<header><h1>Aufmaß</h1></header>
-<div class="box grid">
-<div><label>Datum</label><input type="date" id="datum"></div>
-<div><label>Kunde</label><input id="kunde" placeholder="Name / Adresse"></div>
-<div><label>Auftragsnummer (optional)</label><input id="auftragsnr" placeholder="z.B. 2026-041"></div>
-<div><label>Auftrag / Baustelle</label><input id="auftrag"></div>
-<div><label>Aufgenommen von</label><input id="person"></div>
-</div>
-<div class="tabs"><button id="t1" class="akt" onclick="tab(1)">Aus Katalog</button><button id="t2" onclick="tab(2)">Sonstiges</button><button id="t3" onclick="tab(3)">Katalog</button></div>
+<header class="bar"><div class="wrap"><div class="brand"><span class="mark"></span><h1>Aufmaß</h1></div><span class="vtop" id="vtop"></span></div></header>
+<main class="wrap">
 
-<div id="p1" class="box">
-<div id="keinKat" class="hinweis" style="display:none;margin-bottom:8px">Noch kein Materialkatalog geladen. Tippe oben auf <b>„Katalog“</b> und importiere eure CSV-Datei.</div>
-<label>Material suchen</label>
-<input id="suche" placeholder="z.B. Rohr, Kabel, Fliese ..." autocomplete="off">
-<div id="treffer"></div>
-<div class="row" style="margin-top:8px">
-<div><label>Menge</label><input id="menge" type="text" inputmode="decimal"></div>
-<div><label>Einheit</label><input id="einheit" readonly></div>
-<div style="flex:2"><label>Bemerkung / Ort</label><input id="bem" placeholder="z.B. Bad OG"></div>
-</div>
-<button onclick="hinzu()">+ Hinzufügen</button>
+<section class="card kopf" aria-label="Auftragsdaten">
+  <div class="kopfzeile"><span class="sec">Auftragsdaten</span><span class="hint">gilt für alle Reiter</span></div>
+  <div class="kgrid">
+    <div><label class="lbl" for="datum">Datum</label><input class="in" type="date" id="datum"></div>
+    <div><label class="lbl" for="auftragsnr">Auftragsnr.</label><input class="in" id="auftragsnr" placeholder="optional"></div>
+    <div class="s2"><label class="lbl" for="kunde">Kunde</label><input class="in" id="kunde" placeholder="Name / Adresse"></div>
+    <div class="s2"><label class="lbl" for="auftrag">Auftrag / Baustelle</label><input class="in" id="auftrag" placeholder="z.B. Badsanierung OG"></div>
+    <div class="s2"><label class="lbl" for="person">Aufgenommen von</label><input class="in" id="person"></div>
+    <div class="sall"><label class="lbl" for="notizen">Notizen zur Baustelle</label><textarea class="in" id="notizen" placeholder="z.B. Zugang, Besonderheiten, Absprachen"></textarea></div>
+  </div>
+</section>
+
+<div class="layout">
+<div class="links">
+  <nav class="tabs" aria-label="Bereiche"><button id="t1" class="akt" onclick="tab(1)">Aus Katalog</button><button id="t2" onclick="tab(2)">Sonstiges</button><button id="t3" onclick="tab(3)">Katalog</button></nav>
+
+  <section id="p1" class="card panel">
+    <div id="keinKat" class="hinweis" style="display:none">Noch kein Materialkatalog geladen. Tippe oben auf <b>„Katalog“</b> und importiere eure CSV-Datei.</div>
+    <label class="lbl" for="suche">Material suchen</label>
+    <div class="suche">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a93a3" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input class="in" id="suche" placeholder="z.B. Rohr, Kabel, Fliese ..." autocomplete="off" enterkeyhint="search">
+    </div>
+    <div id="treffer"></div>
+    <div class="g2 mt14">
+      <div><label class="lbl" for="menge">Menge</label><input class="in" id="menge" type="text" inputmode="decimal"></div>
+      <div><label class="lbl" for="einheit">Einheit</label><input class="in" id="einheit" readonly></div>
+      <div class="s2"><label class="lbl" for="bem">Bemerkung / Ort</label><input class="in" id="bem" placeholder="z.B. Bad OG"></div>
+    </div>
+    <button class="btn btn-blau mt14" onclick="hinzu()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Hinzufügen</button>
+  </section>
+
+  <section id="p2" class="card panel" style="display:none">
+    <div class="g2">
+      <div class="s2"><label class="lbl" for="sName">Bezeichnung (frei)</label><input class="in" id="sName" placeholder="z.B. Kernbohrung 100 mm"></div>
+      <div><label class="lbl" for="sMenge">Menge</label><input class="in" id="sMenge" type="text" inputmode="decimal"></div>
+      <div><label class="lbl" for="sEinheit">Einheit</label><input class="in" id="sEinheit" placeholder="Stk, m, Std ..." list="einh"></div>
+      <div class="s2"><label class="lbl" for="sKatg">Kategorie</label><select class="in" id="sKatg"><option>Material</option><option>Stunden</option><option>Sonstiges</option></select></div>
+      <div class="s2"><label class="lbl" for="sBem">Bemerkung / Ort</label><input class="in" id="sBem"></div>
+    </div>
+    <datalist id="einh"><option>Stk</option><option>m</option><option>m²</option><option>m³</option><option>Std</option><option>kg</option><option>l</option><option>Pauschal</option></datalist>
+    <label class="merk" id="sMerkBox" for="sMerk"><input type="checkbox" id="sMerk"><span><b>Als eigenes Material merken</b><br>Bekommt eine E-Nummer und ist danach unter „Aus Katalog“ suchbar – nur auf diesem Gerät.</span></label>
+    <button class="btn btn-gelb mt14" onclick="sonst()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Sonstiges hinzufügen</button>
+  </section>
+
+  <section id="p3" class="card panel" style="display:none">
+    <div class="stats" id="katInfo"></div>
+    <span class="sec">Katalog verwalten</span>
+    <input type="file" id="fileIn">
+    <div class="teil mt14" style="margin-top:10px">
+      <button class="btn btn-blau" onclick="document.getElementById('fileIn').click()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5M5 20h14"/></svg>Katalog importieren</button>
+      <p class="desc">Liest eure Materialliste (CSV) ein und ersetzt den bisherigen Katalog. Aufbau: <code>Artikelnummer;Bezeichnung;Einheit;Kategorie</code>. Die Spalte „Kategorie“ (Material, Stunden, Sonstiges) ist freiwillig – fehlt sie, entscheidet die Einheit. Nichts wird hochgeladen. Eigene Materialien bleiben, außer sie stehen schon in der neuen Liste.</p>
+    </div>
+    <div class="teil">
+      <button class="btn btn-gelb" onclick="katExport()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Katalog als CSV exportieren</button>
+      <p class="desc">Katalog plus eigene Materialien (E-Nummern) inklusive Kategorie als CSV zum Weiterschicken – so kommen neue Materialien in die gemeinsame Liste.</p>
+    </div>
+  </section>
 </div>
 
-<div id="p2" class="box" style="display:none">
-<label>Bezeichnung (frei)</label><input id="sName" placeholder="z.B. Sonderanfertigung Edelstahlblende">
-<div class="row" style="margin-top:8px">
-<div><label>Menge</label><input id="sMenge" type="text" inputmode="decimal"></div>
-<div><label>Einheit</label><input id="sEinheit" placeholder="Stk, m, m², Std ..." list="einh"></div>
-<div><label>Kategorie</label><select id="sKatg"><option>Material</option><option>Stunden</option><option>Sonstiges</option></select></div>
-<div style="flex:2"><label>Bemerkung / Ort</label><input id="sBem"></div>
-</div>
-<datalist id="einh"><option>Stk</option><option>m</option><option>m²</option><option>m³</option><option>Std</option><option>kg</option><option>l</option><option>Pauschal</option></datalist>
-<label class="chk" id="sMerkBox"><input type="checkbox" id="sMerk"><span>Als eigenes Material merken – bekommt eine E-Nummer und ist danach unter „Aus Katalog“ suchbar (nur auf diesem Gerät)</span></label>
-<button class="gelb" onclick="sonst()">+ Sonstiges hinzufügen</button>
-</div>
+<div class="rechts">
+  <div id="p3b">
+    <div class="trenner"><i></i><span class="sec">Löschen</span><i></i></div>
+    <section class="card gefahr">
+      <div class="teil">
+        <button class="btn btn-rot" onclick="eigeneLoeschen()">Eigene Materialien löschen</button>
+        <p class="desc">Löscht <b>nur</b> die selbst angelegten Materialien (E-Nummern) von diesem Gerät. Sinnvoll, wenn sie schon in der gemeinsamen Liste stehen. <b>Tipp:</b> vorher exportieren, sonst sind sie weg.</p>
+      </div>
+      <div class="teil">
+        <button class="btn btn-rot" onclick="katalogLoeschen()">Katalog vom Gerät löschen</button>
+        <p class="desc">Entfernt den importierten Katalog von diesem Gerät, z. B. bevor das Handy weitergegeben wird. Eigene Materialien und das aktuelle Aufmaß bleiben erhalten.</p>
+      </div>
+    </section>
+  </div>
 
-<div id="p3" class="box" style="display:none">
-<div id="katInfo" class="hinweis"></div>
-<input type="file" id="fileIn">
-<div class="abschnitt">
-<button onclick="document.getElementById('fileIn').click()">Katalog importieren</button>
-<p>Liest eine CSV-Datei mit eurer Materialliste ein. Aufbau: <code>Artikelnummer;Bezeichnung;Einheit;Kategorie</code>. Die Spalte Kategorie (Material, Stunden oder Sonstiges) ist freiwillig – fehlt sie, entscheidet das Tool nach der Einheit (Std → Stunden, Pauschal → Sonstiges, sonst Material). Ersetzt den bisherigen Katalog. Die Datei wird nur auf diesem Gerät gelesen, nichts wird hochgeladen. Eigene Materialien bleiben erhalten – außer sie stehen jetzt schon in der neuen Liste.</p>
-</div>
-<div class="abschnitt">
-<button class="gelb" onclick="katExport()">Katalog als CSV exportieren</button>
-<p>Erstellt eine CSV-Datei mit dem kompletten Katalog <b>plus</b> allen eigenen Materialien (E-Nummern), inklusive Kategorie. Diese Datei kannst du z.B. per Mail weiterschicken, damit die neuen Materialien in die gemeinsame Materialliste übernommen werden.</p>
-</div>
-<div class="abschnitt">
-<button class="sec" onclick="eigeneLoeschen()">Eigene Materialien löschen</button>
-<p>Löscht <b>nur</b> die selbst angelegten Materialien (E-Nummern) von diesem Gerät. Sinnvoll, wenn sie inzwischen in der gemeinsamen Liste stehen. <b>Tipp:</b> Vorher exportieren, sonst sind sie weg.</p>
-</div>
-<div class="abschnitt">
-<button class="sec" onclick="katalogLoeschen()">Katalog vom Gerät löschen</button>
-<p>Entfernt den importierten Katalog von diesem Gerät, z.B. bevor du das Handy weitergibst. Eigene Materialien und das aktuelle Aufmaß bleiben erhalten.</p>
+  <div id="aufmass">
+    <div class="listkopf"><h2>Aktuelles Aufmaß</h2><span class="chip" id="anzahl"></span></div>
+    <section class="card liste" id="liste" aria-live="polite"></section>
+    <div class="aktionen">
+      <button class="btn btn-blau" onclick="erstellen(false)">PDF erstellen</button>
+      <button class="btn btn-gelb" onclick="erstellen(true)">PDF + JSON erstellen</button>
+      <button class="btn btn-rot zwei sall" onclick="neu()">Neues Aufmaß<small>(aktuelles Aufmaß wird gelöscht)</small></button>
+    </div>
+  </div>
 </div>
 </div>
 
-<div class="tw"><table><thead><tr><th>Pos.</th><th>Art.-Nr.</th><th>Material / Leistung</th><th>Menge</th><th></th></tr></thead><tbody id="liste"></tbody></table></div>
-<div class="row" style="margin-top:12px">
-<button onclick="erstellen(false)">PDF erstellen</button>
-<button class="gelb" onclick="erstellen(true)">PDF + JSON erstellen<small>(für das Abschlussaufmaß)</small></button>
-</div>
-<button class="sec" style="margin-top:8px" onclick="neu()">Neues Aufmaß<small>(aktuelles Aufmaß wird gelöscht)</small></button>
-<p class="info" id="ver" style="margin-top:20px;text-align:center"></p>
+<p class="foot" id="ver"></p>
+</main>
 
 <script src="jspdf.min.js"></script>
 <script src="jspdf.autotable.min.js"></script>
 <script>
-const VERSION="1.2";
+const VERSION="1.3";
 const KATS=["Material","Stunden","Sonstiges"];
 const $=id=>document.getElementById(id);
 const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
@@ -129,7 +251,8 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const istENr=nr=>/^E\d+$/i.test(String(nr));
 const nrHtml=nr=>istENr(nr)?`<span class="enr">${esc(nr)}</span>`:esc(nr);
 const heute=()=>new Date().toISOString().slice(0,10);
-const neueId=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+const neueId=()=>(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+const ICON_DEL='<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
 
 // ---------- Kategorien ----------
 function katVonEinheit(e){
@@ -152,11 +275,14 @@ let katalog=ls.get("am_katalog",[]), katMeta=ls.get("am_katmeta",null), eigene=l
 let daten=ls.get("aufmass",[]), gewaehlt=null, treffer=[], zuletzt=null;
 let aufmassId=ls.get("am_id",null); if(!aufmassId){aufmassId=neueId();ls.set("am_id",aufmassId)}
 const alle=()=>katalog.concat(eigene);
-const KOPF=["datum","kunde","auftragsnr","auftrag","person"];
+const KOPF=["datum","kunde","auftragsnr","auftrag","person","notizen"];
 KOPF.forEach(f=>{$(f).value=ls.get("am_"+f,"");$(f).oninput=()=>ls.set("am_"+f,$(f).value)});
 if(!$("datum").value){$("datum").value=heute();ls.set("am_datum",$("datum").value)}
 
-function tab(n){[1,2,3].forEach(i=>{$("p"+i).style.display=i==n?"":"none";$("t"+i).className=i==n?"akt":""})}
+function tab(n){
+  [1,2,3].forEach(i=>{$("p"+i).style.display=i==n?"":"none";$("t"+i).className=i==n?"akt":""});
+  document.body.classList.toggle("kat",n==3);
+}
 $("sMerk").onchange=()=>$("sMerkBox").classList.toggle("an",$("sMerk").checked);
 let katVonHand=false;
 $("sKatg").onchange=()=>{katVonHand=true};
@@ -166,7 +292,7 @@ function filtern(){
   const q=$("suche").value.toLowerCase().trim();
   $("keinKat").style.display=alle().length?"none":"";
   treffer=alle().filter(k=>(k[0]+" "+k[1]).toLowerCase().includes(q)).slice(0,200);
-  $("treffer").innerHTML=treffer.map((k,i)=>`<div class="opt${gewaehlt&&gewaehlt[0]==k[0]&&gewaehlt[1]==k[1]?" sel":""}" data-i="${i}">${nrHtml(k[0])} – ${esc(k[1])} (${esc(k[2])}) <span class="kat">· ${katVon(k[3],k[2])}</span></div>`).join("")
+  $("treffer").innerHTML=treffer.map((k,i)=>`<div class="opt${gewaehlt&&gewaehlt[0]==k[0]&&gewaehlt[1]==k[1]?" sel":""}" data-i="${i}"><span>${nrHtml(k[0])} · ${esc(k[1])}</span><span class="r">${esc(k[2])} · ${katVon(k[3],k[2])}</span></div>`).join("")
     ||'<div class="opt leer">Nichts gefunden – nutze „Sonstiges“</div>';
 }
 $("treffer").onclick=e=>{const el=e.target.closest(".opt[data-i]");if(!el)return;gewaehlt=treffer[+el.dataset.i];$("einheit").value=gewaehlt[2];filtern();$("menge").focus()};
@@ -209,14 +335,16 @@ function sortiert(){
 function gruppiert(){const s=sortiert();return KATS.map(k=>({kat:k,pos:s.filter(d=>d.kat===k)})).filter(g=>g.pos.length)}
 function zeigen(){
   let n=0;
-  $("liste").innerHTML=gruppiert().map(g=>`<tr class="grp"><td colspan="5">${g.kat}</td></tr>`+g.pos.map(d=>`<tr${d.t&&d.t===zuletzt?' class="neu"':""}><td>${++n}</td><td>${nrHtml(d.nr)}</td><td>${esc(d.name)}${d.bem?`<span class="bem">${esc(d.bem)}</span>`:""}</td><td class="m">${fmt(d.menge)} ${esc(d.einheit)}</td><td><button class="del" data-i="${d.i}">✕</button></td></tr>`).join("")).join("");
-  const neu=$("liste").querySelector("tr.neu");if(neu&&neu.scrollIntoView)neu.scrollIntoView({block:"nearest",behavior:"smooth"});
+  $("anzahl").textContent=daten.length==1?"1 Position":daten.length+" Positionen";
+  $("liste").innerHTML=daten.length?gruppiert().map(g=>`<div class="grp"><b></b><span class="sec">${g.kat}</span><span class="n">${g.pos.length}</span></div>`+g.pos.map(d=>`<div class="pos${d.t&&d.t===zuletzt?" neu":""}"><div class="t"><div class="o">${++n} · ${nrHtml(d.nr)}</div><div class="b">${esc(d.name)}</div>${d.bem?`<div class="bem">${esc(d.bem)}</div>`:""}</div><div class="m">${fmt(d.menge)} ${esc(d.einheit)}</div><button class="del" data-i="${d.i}" aria-label="Position löschen">${ICON_DEL}</button></div>`).join("")).join("")
+    :'<div class="leerliste">Noch keine Positionen – füge links bzw. oben Material hinzu.</div>';
+  const neu=$("liste").querySelector(".pos.neu");if(neu&&neu.scrollIntoView)neu.scrollIntoView({block:"nearest",behavior:"smooth"});
   zuletzt=null;
 }
 $("liste").onclick=e=>{const b=e.target.closest("button.del");if(!b)return;daten.splice(+b.dataset.i,1);speichern();zeigen()};
 function neu(){
-  if(daten.length&&!confirm("Das aktuelle Aufmaß (Liste, Kunde und Auftrag) wird gelöscht.\n\nHast du das PDF gespeichert?"))return;
-  daten=[];speichern();zeigen();["kunde","auftragsnr","auftrag"].forEach(f=>{$(f).value="";ls.set("am_"+f,"")});
+  if(daten.length&&!confirm("Das aktuelle Aufmaß (Liste, Kunde, Auftrag und Notizen) wird gelöscht.\n\nHast du das PDF gespeichert?"))return;
+  daten=[];speichern();zeigen();["kunde","auftragsnr","auftrag","notizen"].forEach(f=>{$(f).value="";ls.set("am_"+f,"")});
   $("datum").value=heute();ls.set("am_datum",$("datum").value);
   aufmassId=neueId();ls.set("am_id",aufmassId);
 }
@@ -267,8 +395,9 @@ function katExport(){
   teilen([new File([csv],"Materialliste_"+heute()+".csv",{type:"text/csv"})]);
 }
 function katInfo(){
-  $("katInfo").innerHTML=(katMeta?`<b>Aktueller Katalog:</b> ${esc(katMeta.datei)}<br>${katMeta.anzahl} Materialien, importiert am ${esc(katMeta.datum)}`:"<b>Noch kein Katalog importiert.</b>")
-    +`<br><b>Eigene Materialien auf diesem Gerät:</b> ${eigene.length}`;
+  const kd=katMeta?`${esc(katMeta.datei)} · ${esc(String(katMeta.datum).split(",")[0])}`:"noch nicht importiert";
+  $("katInfo").innerHTML=`<div class="stat"><div class="k">Katalog</div><div class="v">${katMeta?katMeta.anzahl:0}</div><div class="d">${kd}</div></div>`
+    +`<div class="stat gelb"><div class="k">Eigene (E-Nr.)</div><div class="v">${eigene.length}</div><div class="d">nur auf diesem Gerät</div></div>`;
 }
 function katalogLoeschen(){if(confirm("Den importierten Katalog von diesem Gerät löschen?\n\nEigene Materialien und das aktuelle Aufmaß bleiben erhalten.")){katalog=[];katMeta=null;ls.set("am_katalog",[]);ls.set("am_katmeta",null);gewaehlt=null;katInfo();filtern()}}
 function eigeneLoeschen(){
@@ -279,27 +408,31 @@ function eigeneLoeschen(){
 // ---------- PDF + JSON ----------
 const kopfWerte=()=>Object.fromEntries(KOPF.map(f=>[f,$(f).value.trim()]));
 const datumDE=iso=>iso?new Date(iso+"T12:00").toLocaleDateString("de-DE"):"";
-function dateiName(k){return ("Aufmass_"+(k.kunde||"Kunde")+"_"+(k.datum||"")).replace(/[^\wäöüÄÖÜß-]+/g,"_")}
+const UML={"ä":"ae","ö":"oe","ü":"ue","Ä":"Ae","Ö":"Oe","Ü":"Ue","ß":"ss"};
+function dateiName(k){return ("Aufmass_"+(k.kunde||"Kunde")+"_"+(k.datum||"")).replace(/[äöüÄÖÜß]/g,c=>UML[c]).replace(/[^\w-]+/g,"_").replace(/_+/g,"_")}
+const BLAU=[22,50,92],GELB=[245,184,46];
 
 function bauePDF(k){
   const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
-  doc.setFontSize(18);doc.text("Aufmaß",14,18);
-  doc.setDrawColor(251,192,45);doc.setLineWidth(1.2);doc.line(14,21,196,21);doc.setDrawColor(0);doc.setLineWidth(0.2);
+  doc.setFontSize(18);doc.setTextColor(...BLAU);doc.text("Aufmaß",14,18);doc.setTextColor(0);
+  doc.setDrawColor(...GELB);doc.setLineWidth(1.2);doc.line(14,21,196,21);doc.setDrawColor(0);doc.setLineWidth(0.2);
   doc.setFontSize(10);
   const kopf=[["Datum",datumDE(k.datum)],["Kunde",k.kunde]];
   if(k.auftragsnr)kopf.push(["Auftragsnummer",k.auftragsnr]);
   kopf.push(["Auftrag / Baustelle",k.auftrag],["Aufgenommen von",k.person]);
-  let y=29;kopf.forEach(([a,v])=>{doc.setFont(undefined,"bold");doc.text(a+":",14,y);doc.setFont(undefined,"normal");const z=doc.splitTextToSize(v||"",140);doc.text(z,55,y);y+=6*Math.max(1,z.length)});
+  if(k.notizen)kopf.push(["Notizen",k.notizen]);
+  let y=29;kopf.forEach(([a,v])=>{doc.setFont(undefined,"bold");doc.text(a+":",14,y);doc.setFont(undefined,"normal");const z=doc.splitTextToSize(v||"",140);doc.text(z,55,y);y+=5*Math.max(1,z.length)+1});
   const body=[];let n=0;
   gruppiert().forEach(g=>{
-    body.push([{content:g.kat,colSpan:6,styles:{fillColor:[255,248,225],fontStyle:"bold",textColor:20}}]);
+    body.push([{content:g.kat,colSpan:6,styles:{fillColor:[255,248,230],fontStyle:"bold",textColor:20}}]);
     g.pos.forEach(x=>body.push([++n,x.nr,x.name,fmt(x.menge),x.einheit,x.bem||""]));
   });
   const folgeKopf=["Aufmaß",k.kunde,k.auftragsnr,k.auftrag,datumDE(k.datum)].filter(Boolean).join("  ·  ");
+  const folgeSeite=()=>{doc.setFontSize(8);doc.setTextColor(90);doc.text(doc.splitTextToSize(folgeKopf,182)[0],14,12);doc.setDrawColor(...GELB);doc.setLineWidth(0.6);doc.line(14,14,196,14);doc.setDrawColor(0);doc.setLineWidth(0.2);doc.setTextColor(0)};
   doc.autoTable({startY:y+2,margin:{top:20,bottom:18},head:[["Pos.","Art.-Nr.","Material / Leistung","Menge","Einheit","Bemerkung"]],body,
-    showHead:"everyPage",styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:[21,101,192]},columnStyles:{0:{cellWidth:11},3:{halign:"right"}},
-    didDrawPage:d=>{if(d.pageNumber>1){doc.setFontSize(8);doc.setTextColor(90);doc.text(doc.splitTextToSize(folgeKopf,182)[0],14,12);doc.setDrawColor(251,192,45);doc.setLineWidth(0.6);doc.line(14,14,196,14);doc.setDrawColor(0);doc.setLineWidth(0.2);doc.setTextColor(0)}}});
-  let ey=doc.lastAutoTable.finalY+25;if(ey>272){doc.addPage();ey=40;doc.setFontSize(8);doc.setTextColor(90);doc.text(doc.splitTextToSize(folgeKopf,182)[0],14,12);doc.setTextColor(0)}
+    showHead:"everyPage",styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:BLAU},columnStyles:{0:{cellWidth:11},3:{halign:"right"}},
+    didDrawPage:d=>{if(d.pageNumber>1)folgeSeite()}});
+  let ey=doc.lastAutoTable.finalY+25;if(ey>272){doc.addPage();ey=40;folgeSeite()}
   doc.setLineWidth(0.2);doc.line(14,ey,90,ey);doc.line(115,ey,196,ey);doc.setFontSize(9);doc.text("Ort, Datum",14,ey+5);doc.text("Unterschrift Kunde",115,ey+5);
   const seiten=doc.getNumberOfPages();
   for(let i=1;i<=seiten;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120);doc.text("Seite "+i+" von "+seiten,196,290,{align:"right"});doc.setTextColor(0)}
@@ -308,7 +441,7 @@ function bauePDF(k){
 function baueJSON(k){
   return JSON.stringify({
     format:"aufmass",formatVersion:1,id:aufmassId,erstelltAm:new Date().toISOString(),appVersion:VERSION,
-    kopf:{datum:k.datum,kunde:k.kunde,auftragsnummer:k.auftragsnr,auftrag:k.auftrag,aufgenommenVon:k.person},
+    kopf:{datum:k.datum,kunde:k.kunde,auftragsnummer:k.auftragsnr,auftrag:k.auftrag,aufgenommenVon:k.person,notizen:k.notizen},
     positionen:sortiert().map(x=>({artikelnummer:x.nr==="–"?"":x.nr,bezeichnung:x.name,menge:x.menge,einheit:x.einheit,kategorie:x.kat,bemerkung:x.bem||""}))
   },null,2);
 }
@@ -321,14 +454,17 @@ function erstellen(mitJson){
 }
 
 // ---------- Teilen / Speichern ----------
+// Handy: Teilen-Menü. PC: normaler Download.
+const istHandy=()=>matchMedia("(pointer:coarse)").matches||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 async function teilen(files){
-  if(navigator.canShare&&navigator.canShare({files})){
+  if(istHandy()&&navigator.canShare&&navigator.canShare({files})){
     try{await navigator.share({files});return}catch(e){if(e.name==="AbortError")return}
   }
   files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)},i*400));
 }
 
 $("ver").textContent="Version "+VERSION+" · Daten bleiben nur auf diesem Gerät";
+$("vtop").textContent="Version "+VERSION;
 katInfo();filtern();zeigen();
 if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
   // Wenn eine neue Version installiert wurde, einmal automatisch neu laden
