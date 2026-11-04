@@ -3,305 +3,218 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Aufmaß">
-<meta name="theme-color" content="#16325c">
+<meta name="theme-color" content="#e9edf4">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="glas.css">
 <title>Aufmaß</title>
-<style>
-:root{--blau:#16325c;--blau2:#0f2747;--gelb:#f5b82e;--gelb-hell:#fff8e6;--bg:#f3f5f9;--text:#1a2233;--muted:#5b6577;--linie:#d5dbe5;--rot:#b3261e}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:max(24px,env(safe-area-inset-bottom))}
-.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
-button{font-family:inherit;-webkit-tap-highlight-color:transparent}
+</head><body>
+<div class="hg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
 
-/* Kopfzeile */
-.bar{background:var(--blau);color:#fff;padding-top:env(safe-area-inset-top)}
-.bar .wrap{display:flex;align-items:center;justify-content:space-between;padding:22px 20px 64px}
-.brand{display:flex;align-items:center;gap:10px}
-.mark{width:8px;height:26px;border-radius:4px;background:var(--gelb)}
-h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
-.bar .wrap{gap:12px}
-.navlink{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
-@media (hover:hover){.navlink:hover{background:rgba(255,255,255,.2)}}
+<aside class="seite glass" aria-label="Navigation">
+  <div class="brand"><span></span><b>Aufmaß</b></div>
+  <div class="ncap">Aufmaß</div>
+  <button class="nav" data-tab="1"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Aus Katalog</button>
+  <button class="nav" data-tab="2"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/></svg>Sonstiges</button>
+  <button class="nav" data-tab="3"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Katalog</button>
+  <div class="ncap">Auswertung</div>
+  <a class="nav" href="summe.html"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l6 8-6 8h12"/></svg>Abschlussaufmaß</a>
+  <div class="sfuss"><span class="vtext"></span><br>Daten bleiben nur auf diesem Gerät</div>
+</aside>
 
-/* Karten & Grundelemente */
-.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 1px 3px rgba(16,32,64,.06)}
-.kopf{position:relative;margin-top:-44px;padding:18px 16px 16px;border-top:4px solid var(--gelb);box-shadow:0 6px 20px rgba(16,32,64,.10)}
-.kopfzeile{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sec{font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--muted);text-transform:uppercase}
-.hint{font-size:11px;color:var(--muted)}
-.kgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.s2{grid-column:span 2}.sall{grid-column:1/-1}
-.lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.01em}
-.in{display:block;width:100%;height:46px;border:1px solid var(--linie);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;font-weight:500;color:var(--text);background:#fff;-webkit-appearance:none;appearance:none;margin:0}
-input[type=date].in{line-height:44px;min-width:0}
-input[type=date].in::-webkit-date-and-time-value{text-align:left}
-textarea.in{height:84px;padding:12px 14px;resize:vertical;line-height:1.4}
-select.in{padding-right:40px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235b6577' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center}
-.in::placeholder{color:#8a93a3;font-weight:400}
-.in:focus{outline:none;border-color:var(--blau);box-shadow:0 0 0 3px rgba(245,184,46,.55)}
-.in[readonly]{background:var(--bg);color:var(--muted)}
-.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-
-/* Buttons */
-.btn{width:100%;min-height:50px;border:0;border-radius:12px;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:8px 12px;text-align:center}
-.btn:active{transform:scale(.99);filter:brightness(.95)}
-.btn-blau{background:var(--blau);color:#fff}
-.btn-gelb{background:var(--gelb);color:var(--text);font-weight:700}
-.btn-rot{background:#fff;border:1.5px solid #e2b4b0;color:var(--rot)}
-.btn.zwei{flex-direction:column;gap:2px}
-.btn small{font-size:12px;font-weight:500}
-@media (hover:hover){.btn-blau:hover{background:var(--blau2)}.btn-gelb:hover{filter:brightness(.96)}.btn-rot:hover{background:#fdf3f2}}
-.mt14{margin-top:14px}
-
-/* Reiter */
-.tabs{margin-top:20px;background:#e4e9f1;border-radius:14px;padding:4px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
-.tabs button{height:44px;border:0;border-radius:11px;background:transparent;color:#3a4456;font-size:15px;font-weight:600;cursor:pointer}
-.tabs button.akt{background:var(--blau);color:#fff;box-shadow:inset 0 -3px 0 var(--gelb)}
-.panel{margin-top:14px}
-
-/* Suche */
-.suche{position:relative}
-.suche svg{position:absolute;left:14px;top:14px;pointer-events:none}
-.suche .in{padding-left:42px}
-#treffer{margin-top:10px;border:1px solid #e3e7ee;border-radius:12px;overflow-y:auto;max-height:264px;-webkit-overflow-scrolling:touch}
-.opt{padding:12px 14px;border-top:1px solid #eef1f5;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;font-size:15px}
-.opt:first-child{border-top:0}
-.opt .r{font-size:13px;color:var(--muted);white-space:nowrap}
-.opt.sel{background:var(--blau);color:#fff;box-shadow:inset 5px 0 0 var(--gelb);font-weight:600}
-.opt.sel .r{color:#fff;opacity:.8}
-.opt.leer{color:var(--muted);cursor:default}
-@media (hover:hover){.opt:not(.sel):not(.leer):hover{background:#f7f8fb}}
-.enr{background:var(--gelb);color:var(--text);font-weight:700;padding:1px 6px;border-radius:5px}
-.hinweis{background:var(--gelb-hell);border:1px solid var(--gelb);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
-
-/* Haken bei Sonstiges */
-.merk{margin-top:14px;display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;border:1.5px solid var(--linie);cursor:pointer}
-.merk.an{background:var(--gelb-hell);border-color:var(--gelb)}
-.merk input{width:24px;height:24px;margin:0;flex:none;accent-color:var(--blau)}
-.merk span{font-size:14px;line-height:1.45}
-
-/* Katalog */
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
-.stat{background:var(--bg);border-radius:12px;padding:12px;min-width:0}
-.stat.gelb{background:var(--gelb-hell)}
-.stat .k{font-size:12px;color:var(--muted)}
-.stat .v{font-size:20px;font-weight:700}
-.stat .d{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
-.desc{margin:8px 2px 0;font-size:13px;line-height:1.5;color:#4a5466}
-.teil+.teil{margin-top:16px}
-.trenner{margin:26px 4px 0;display:flex;align-items:center;gap:12px}
-.trenner i{flex:1;height:2px;background:var(--linie)}
-.trenner .sec{color:var(--rot)}
-.gefahr{margin-top:14px;border:1.5px solid #f1c9c5;box-shadow:none}
-.gefahr .teil+.teil{padding-top:16px;border-top:1px solid #f3dcd9}
-#fileIn{display:none}
-
-/* Aufmaß-Liste */
-.listkopf{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 10px}
-h2{margin:0;font-size:18px;font-weight:700}
-.chip{font-size:12px;font-weight:600;color:#3a4456;background:#e4e9f1;padding:4px 10px;border-radius:999px}
-.liste{padding:0;overflow:hidden}
-.grp{padding:10px 16px;background:#f7f8fb;display:flex;align-items:center;gap:8px;border-bottom:1px solid #eef1f5}
-.grp b{width:6px;height:14px;border-radius:3px;background:var(--gelb)}
-.grp .sec{color:var(--text)}
-.grp .n{font-size:12px;color:var(--muted)}
-.pos{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eef1f5;background:#fff}
-.liste>.pos:last-child{border-bottom:0}
-.pos .t{flex:1;min-width:0}
-.pos .o{font-size:12px;color:var(--muted)}
-.pos .b{font-size:15px;font-weight:600;overflow-wrap:anywhere}
-.pos .bem{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.pos .m{font-size:15px;font-weight:600;white-space:nowrap}
-.del{width:40px;height:40px;border:0;border-radius:10px;background:#fdecea;color:#c62828;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
-@media (hover:hover){.del:hover{background:#f9d7d3}}
-.pos.neu{animation:blink 1.8s ease-out}
-@keyframes blink{0%,45%{background:#fff1c7}100%{background:#fff}}
-.leerliste{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
-.aktionen{margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.aktionen .btn{min-height:54px}
-.foot{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
-
-/* Reiter Katalog: nur Katalog-Funktionen */
-#p3b{display:none}
-body.kat #p3b{display:block}
-body.kat #aufmass{display:none}
-
-/* Tablet hochkant: Auftragsdaten kompakter */
-@media (min-width:700px){.kgrid{grid-template-columns:repeat(4,minmax(0,1fr))}textarea.in{height:64px}}
-
-/* PC / Tablet quer */
-@media (min-width:900px){
-  .bar .wrap{padding:26px 24px 72px}
-  h1{font-size:28px}
-  .kopf{padding:20px 22px 22px}
-  .kgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-  textarea.in{height:64px}
-  .layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:24px;align-items:start}
-  .rechts{position:sticky;top:16px}
-  .listkopf{margin-top:20px;height:52px}
-  .liste{max-height:calc(100vh - 270px);min-height:160px;overflow-y:auto}
-  body.kat .rechts{position:static}
-  body.kat .trenner{margin-top:20px;height:52px}
-}
-</style></head><body>
-<header class="bar"><div class="wrap"><div class="brand"><span class="mark"></span><h1>Aufmaß</h1></div><a class="navlink" href="summe.html">Abschlussaufmaß<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a></div></header>
-<main class="wrap">
-
-<section class="card kopf" aria-label="Auftragsdaten">
-  <div class="kopfzeile"><span class="sec">Auftragsdaten</span><span class="hint">gilt für alle Reiter</span></div>
-  <div class="kgrid">
-    <div><label class="lbl" for="datum">Datum</label><input class="in" type="date" id="datum"></div>
-    <div><label class="lbl" for="auftragsnr">Auftragsnr.</label><input class="in" id="auftragsnr" placeholder="optional"></div>
-    <div class="s2"><label class="lbl" for="kunde">Kunde</label><input class="in" id="kunde" placeholder="Name / Adresse"></div>
-    <div class="s2"><label class="lbl" for="auftrag">Auftrag / Baustelle</label><input class="in" id="auftrag" placeholder="z.B. Badsanierung OG"></div>
-    <div class="s2"><label class="lbl" for="person">Aufgenommen von</label><input class="in" id="person"></div>
-    <div class="sall"><label class="lbl" for="notizen">Notizen zur Baustelle</label><textarea class="in" id="notizen" placeholder="z.B. Zugang, Besonderheiten, Absprachen"></textarea></div>
-  </div>
-</section>
-
-<div class="layout">
-<div class="links">
-  <nav class="tabs" aria-label="Bereiche"><button id="t1" class="akt" onclick="tab(1)">Aus Katalog</button><button id="t2" onclick="tab(2)">Sonstiges</button><button id="t3" onclick="tab(3)">Katalog</button></nav>
-
-  <section id="p1" class="card panel">
-    <div id="keinKat" class="hinweis" style="display:none">Noch kein Materialkatalog geladen. Tippe oben auf <b>„Katalog“</b> und importiere eure CSV-Datei.</div>
-    <label class="lbl" for="suche">Material suchen</label>
-    <div class="suche">
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a93a3" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input class="in" id="suche" placeholder="z.B. Rohr, Kabel, Fliese ..." autocomplete="off" enterkeyhint="search">
+<div class="app">
+  <header class="leiste glass">
+    <div><div class="lt" id="ltTitel">Aus Katalog</div><div class="ls" id="ltSub"></div></div>
+    <div class="laktionen" id="lAktionen">
+      <button class="btn glass btn-rot" onclick="neu()" title="Aktuelles Aufmaß wird gelöscht"><span aria-hidden="true" style="display:flex"></span>Neues Aufmaß</button>
+      <button class="btn btn-blau" onclick="erstellen(false)">PDF</button>
+      <button class="btn btn-gelb" onclick="erstellen(true)">PDF + JSON</button>
     </div>
-    <div id="treffer"></div>
-    <div class="g2 mt14">
-      <div><label class="lbl" for="menge">Menge</label><input class="in" id="menge" type="text" inputmode="decimal"></div>
-      <div><label class="lbl" for="einheit">Einheit</label><input class="in" id="einheit" readonly></div>
-      <div class="s2"><label class="lbl" for="bem">Bemerkung / Ort</label><input class="in" id="bem" placeholder="z.B. Bad OG"></div>
-    </div>
-    <button class="btn btn-blau mt14" onclick="hinzu()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Hinzufügen</button>
-  </section>
+  </header>
 
-  <section id="p2" class="card panel" style="display:none">
-    <div class="g2">
-      <div class="s2"><label class="lbl" for="sName">Bezeichnung (frei)</label><input class="in" id="sName" placeholder="z.B. Kernbohrung 100 mm"></div>
-      <div><label class="lbl" for="sMenge">Menge</label><input class="in" id="sMenge" type="text" inputmode="decimal"></div>
-      <div><label class="lbl" for="sEinheit">Einheit</label><input class="in" id="sEinheit" placeholder="Stk, m, Std ..." list="einh"></div>
-      <div class="s2"><label class="lbl" for="sKatg">Kategorie</label><select class="in" id="sKatg"><option>Material</option><option>Stunden</option><option>Sonstiges</option></select></div>
-      <div class="s2"><label class="lbl" for="sBem">Bemerkung / Ort</label><input class="in" id="sBem"></div>
-    </div>
-    <datalist id="einh"><option>Stk</option><option>m</option><option>m²</option><option>m³</option><option>Std</option><option>kg</option><option>l</option><option>Pauschal</option></datalist>
-    <label class="merk" id="sMerkBox" for="sMerk"><input type="checkbox" id="sMerk"><span><b>Als eigenes Material merken</b><br>Bekommt eine E-Nummer und ist danach unter „Aus Katalog“ suchbar – nur auf diesem Gerät.</span></label>
-    <button class="btn btn-gelb mt14" onclick="sonst()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Sonstiges hinzufügen</button>
-  </section>
+  <header class="handykopf">
+    <div><h1 id="hTitel">Aufmaß</h1></div>
+    <a class="pille glass" href="summe.html"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l6 8-6 8h12"/></svg>Abschluss</a>
+  </header>
 
-  <section id="p3" class="card panel" style="display:none">
-    <div class="stats" id="katInfo"></div>
-    <span class="sec">Katalog verwalten</span>
-    <input type="file" id="fileIn">
-    <div class="teil mt14" style="margin-top:10px">
-      <button class="btn btn-blau" onclick="document.getElementById('fileIn').click()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5M5 20h14"/></svg>Katalog importieren</button>
-      <p class="desc">Liest eure Materialliste (CSV) ein und ersetzt den bisherigen Katalog. Aufbau: <code>Artikelnummer;Bezeichnung;Einheit;Kategorie</code>. Die Spalte „Kategorie“ (Material, Stunden, Sonstiges) ist freiwillig – fehlt sie, entscheidet die Einheit. Nichts wird hochgeladen. Eigene Materialien bleiben, außer sie stehen schon in der neuen Liste.</p>
-    </div>
-    <div class="teil">
-      <button class="btn btn-gelb" onclick="katExport()"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Katalog als CSV exportieren</button>
-      <p class="desc">Katalog plus eigene Materialien (E-Nummern) inklusive Kategorie als CSV zum Weiterschicken – so kommen neue Materialien in die gemeinsame Liste.</p>
-    </div>
-  </section>
-</div>
-
-<div class="rechts">
-  <div id="p3b">
-    <div class="trenner"><i></i><span class="sec">Löschen</span><i></i></div>
-    <section class="card gefahr">
-      <div class="teil">
-        <button class="btn btn-rot" onclick="eigeneLoeschen()">Eigene Materialien löschen</button>
-        <p class="desc">Löscht <b>nur</b> die selbst angelegten Materialien (E-Nummern) von diesem Gerät. Sinnvoll, wenn sie schon in der gemeinsamen Liste stehen. <b>Tipp:</b> vorher exportieren, sonst sind sie weg.</p>
+  <section class="glass karte kopf" id="kopf" aria-label="Auftragsdaten">
+    <button class="kopfzu" id="kopfZu" aria-expanded="false" aria-controls="kopfInhalt">
+      <span class="bar"></span>
+      <span class="tt"><span class="t1" id="kz1"></span><span class="t2" id="kz2"></span></span>
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5466" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="kopfinhalt" id="kopfInhalt">
+      <div class="kcap">Auftragsdaten <span>· gilt für alle Bereiche</span></div>
+      <div class="form fgrid">
+        <div class="f w1"><label for="datum">Datum</label><input class="in" type="date" id="datum"></div>
+        <div class="f w1"><label for="auftragsnr">Auftragsnr.</label><input class="in" id="auftragsnr" placeholder="optional"></div>
+        <div class="f w2"><label for="kunde">Kunde</label><input class="in" id="kunde" placeholder="Name / Adresse"></div>
+        <div class="f w2"><label for="auftrag">Baustelle</label><input class="in" id="auftrag" placeholder="z.B. Bad OG"></div>
+        <div class="f w2"><label for="person">Aufgenommen von</label><input class="in" id="person" placeholder="Name"></div>
+        <div class="f lang w4"><label for="notizen">Notizen zur Baustelle</label><textarea class="in" id="notizen" rows="2" placeholder="z.B. Zugang, Besonderheiten, Absprachen"></textarea></div>
       </div>
-      <div class="teil">
-        <button class="btn btn-rot" onclick="katalogLoeschen()">Katalog vom Gerät löschen</button>
-        <p class="desc">Entfernt den importierten Katalog von diesem Gerät, z. B. bevor das Handy weitergegeben wird. Eigene Materialien und das aktuelle Aufmaß bleiben erhalten.</p>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <div id="aufmass">
-    <div class="listkopf"><h2>Aktuelles Aufmaß</h2><span class="chip" id="anzahl"></span></div>
-    <section class="card liste" id="liste" aria-live="polite"></section>
-    <div class="aktionen">
-      <button class="btn btn-blau" onclick="erstellen(false)">PDF erstellen</button>
-      <button class="btn btn-gelb" onclick="erstellen(true)">PDF + JSON erstellen</button>
-      <button class="btn btn-rot zwei sall" onclick="neu()">Neues Aufmaß<small>(aktuelles Aufmaß wird gelöscht)</small></button>
+  <div class="spalten">
+    <div class="links">
+      <!-- Aus Katalog -->
+      <section id="p1">
+        <div class="cap"><span>Material hinzufügen</span></div>
+        <div class="glass karte panel">
+          <div id="keinKat" class="hinweis" hidden>Noch kein Materialkatalog geladen. Öffne <b>„Katalog“</b> und importiere eure CSV-Datei.</div>
+          <label class="glass suche" for="suche">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a5466" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="suche" placeholder="Material suchen …" autocomplete="off" enterkeyhint="search" aria-label="Material suchen">
+          </label>
+          <div class="glass karte treffer" id="treffer" role="listbox" aria-label="Suchergebnisse"></div>
+          <div class="glass karte form fgrid drei mt" style="overflow:visible">
+            <div class="f"><label for="menge">Menge</label><input class="in" id="menge" type="text" inputmode="decimal" placeholder="0"></div>
+            <div class="f ro"><label for="einheit">Einheit</label><input class="in" id="einheit" readonly tabindex="-1"></div>
+            <div class="f"><label for="bem">Bemerkung / Ort</label><input class="in" id="bem" placeholder="z.B. Bad OG"></div>
+          </div>
+          <button class="btn btn-blau mt" onclick="hinzu()"><span class="pl"></span>Hinzufügen</button>
+        </div>
+      </section>
+
+      <!-- Sonstiges -->
+      <section id="p2" hidden>
+        <div class="cap"><span>Freie Position</span></div>
+        <div class="glass karte panel">
+          <div class="glass karte form fgrid drei" style="overflow:visible">
+            <div class="f wall"><label for="sName">Bezeichnung</label><input class="in" id="sName" placeholder="z.B. Kernbohrung 100 mm"></div>
+            <div class="f"><label for="sMenge">Menge</label><input class="in" id="sMenge" type="text" inputmode="decimal" placeholder="0"></div>
+            <div class="f"><label for="sEinheit">Einheit</label><input class="in" id="sEinheit" placeholder="Stk" list="einh"></div>
+            <div class="f"><label for="sKatg">Kategorie</label><select class="in" id="sKatg"><option>Material</option><option>Stunden</option><option>Sonstiges</option></select></div>
+            <div class="f wall"><label for="sBem">Bemerkung / Ort</label><input class="in" id="sBem" placeholder="optional"></div>
+          </div>
+          <datalist id="einh"><option>Stk</option><option>m</option><option>m²</option><option>m³</option><option>Std</option><option>kg</option><option>l</option><option>Pauschal</option></datalist>
+          <div class="glass karte form fgrid mt" style="overflow:visible">
+            <div class="f schalt wall"><label for="sMerk">Als eigenes Material merken<small>bekommt eine E-Nummer · danach über die Suche auffindbar · nur auf diesem Gerät</small></label><input type="checkbox" class="schalter" id="sMerk"></div>
+          </div>
+          <button class="btn btn-gelb mt" onclick="sonst()"><span class="pl"></span>Sonstiges hinzufügen</button>
+        </div>
+      </section>
+
+      <!-- Katalog -->
+      <section id="p3" hidden>
+        <div class="stats" id="katInfo"></div>
+        <div class="cap"><span>Katalog verwalten</span></div>
+        <div class="glass karte">
+          <button class="item" onclick="document.getElementById('fileIn').click()"><span class="ico" style="background:var(--blau)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5M5 20h14"/></svg></span>
+            <span><span class="t">Katalog importieren</span><span class="d">CSV mit Artikelnummer; Bezeichnung; Einheit; Kategorie. Die Kategorie ist freiwillig – fehlt sie, entscheidet die Einheit (Std → Stunden, Pauschal → Sonstiges). Ersetzt den bisherigen Katalog. Nichts wird hochgeladen.</span></span></button>
+          <button class="item" onclick="katExport()"><span class="ico" style="background:var(--gelb)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a2233" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>
+            <span><span class="t">Als CSV exportieren</span><span class="d">Katalog plus eigene E-Materialien inkl. Kategorie zum Weiterschicken – so kommen neue Materialien in die gemeinsame Liste.</span></span></button>
+        </div>
+        <input type="file" id="fileIn" hidden>
+        <div class="cap"><span>Firmenlogo für die PDFs</span></div>
+        <div class="glass karte">
+          <div class="logozeile">
+            <div class="logovorschau" id="logoVorschau">kein Logo</div>
+            <div class="logoknoepfe">
+              <button class="btn glass btn-glas" onclick="document.getElementById('logoIn').click()">Logo wählen</button>
+              <button class="btn glass btn-rot" id="logoWeg" onclick="logoEntfernen()">Entfernen</button>
+            </div>
+          </div>
+        </div>
+        <p class="fuss">Das Logo wird nur auf diesem Gerät gespeichert und erscheint oben rechts im Aufmaß- und Abschluss-PDF.</p>
+        <input type="file" id="logoIn" accept="image/*" hidden>
+      </section>
+    </div>
+
+    <div class="rechts">
+      <!-- Katalog: Löschen -->
+      <section id="p3b" hidden>
+        <div class="cap rot oben"><span>Löschen</span></div>
+        <div class="glass karte gefahr">
+          <button class="item rot" onclick="eigeneLoeschen()"><span class="ico" style="background:rgba(217,48,37,.12)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span>
+            <span><span class="t">Eigene Materialien löschen</span><span class="d">Löscht <b>nur</b> die E-Nummern von diesem Gerät. Sinnvoll, wenn sie schon in der gemeinsamen Liste stehen. Tipp: vorher exportieren, sonst sind sie weg.</span></span></button>
+          <button class="item rot" onclick="katalogLoeschen()"><span class="ico" style="background:rgba(217,48,37,.12)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span>
+            <span><span class="t">Katalog vom Gerät löschen</span><span class="d">Entfernt den importierten Katalog, z. B. bevor das Gerät weitergegeben wird. Eigene Materialien und das aktuelle Aufmaß bleiben erhalten.</span></span></button>
+        </div>
+      </section>
+
+      <!-- Aktuelles Aufmaß -->
+      <section id="aufmass">
+        <div class="cap oben"><span>Aktuelles Aufmaß</span><span class="chip" id="anzahl"></span></div>
+        <div class="scrollbox" id="liste" aria-live="polite"></div>
+        <div class="zweier nurhandy">
+          <button class="btn btn-blau" onclick="erstellen(false)">PDF</button>
+          <button class="btn btn-gelb" onclick="erstellen(true)">PDF + JSON</button>
+          <button class="btn glass btn-rot zwei ganz" onclick="neu()">Neues Aufmaß<small>(aktuelles Aufmaß wird gelöscht)</small></button>
+        </div>
+      </section>
     </div>
   </div>
-</div>
+  <p class="version"><span class="vtext"></span> · Daten bleiben nur auf diesem Gerät</p>
 </div>
 
-<p class="foot" id="ver"></p>
-</main>
+<nav class="tableiste" aria-label="Bereiche">
+  <div class="glass tabs">
+    <button data-tab="1"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Aus Katalog</button>
+    <button data-tab="2"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/></svg>Sonstiges</button>
+    <button data-tab="3"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Katalog</button>
+  </div>
+  <button class="glass rund" id="rundPDF" aria-label="PDF erstellen" onclick="pdfAuswahl()"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
+</nav>
 
 <script src="jspdf.min.js"></script>
 <script src="jspdf.autotable.min.js"></script>
+<script src="basis.js"></script>
 <script>
-const VERSION="1.4";
-const KATS=["Material","Stunden","Sonstiges"];
-const $=id=>document.getElementById(id);
-const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
-          set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Speichern auf dem Gerät nicht möglich.")}}};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const istENr=nr=>/^E\d+$/i.test(String(nr));
-const nrHtml=nr=>istENr(nr)?`<span class="enr">${esc(nr)}</span>`:esc(nr);
-const heute=()=>new Date().toISOString().slice(0,10);
-const neueId=()=>(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
-const ICON_DEL='<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
-
-// ---------- Kategorien ----------
-function katVonEinheit(e){
-  e=String(e||"").toLowerCase().replace(/\./g,"").trim();
-  if(/^(std|h|stunde|stunden|std\/mann|mannstunde|mannstunden)$/.test(e))return "Stunden";
-  if(/^(pauschal|pauschale|psch|pausch|pa)$/.test(e))return "Sonstiges";
-  return "Material";
-}
-function normKat(k){
-  k=String(k||"").toLowerCase().trim();
-  if(k.startsWith("mat"))return "Material";
-  if(/^(std|stund|lohn|arbeit)/.test(k))return "Stunden";
-  if(k.startsWith("sons"))return "Sonstiges";
-  return "";
-}
-const katVon=(kat,einheit)=>normKat(kat)||katVonEinheit(einheit);
+document.querySelectorAll(".pl").forEach(s=>s.outerHTML=IC.plus);
+document.querySelectorAll('#lAktionen [aria-hidden="true"]').forEach(s=>s.outerHTML=IC.muell);
 
 // ---------- Daten ----------
 let katalog=ls.get("am_katalog",[]), katMeta=ls.get("am_katmeta",null), eigene=ls.get("am_eigene",[]);
-let daten=ls.get("aufmass",[]), gewaehlt=null, treffer=[], zuletzt=null;
+let daten=ls.get("aufmass",[]), gewaehlt=null, treffer=[], zuletzt=null, aktTab=1;
 let aufmassId=ls.get("am_id",null); if(!aufmassId){aufmassId=neueId();ls.set("am_id",aufmassId)}
 const alle=()=>katalog.concat(eigene);
 const KOPF=["datum","kunde","auftragsnr","auftrag","person","notizen"];
-KOPF.forEach(f=>{$(f).value=ls.get("am_"+f,"");$(f).oninput=()=>ls.set("am_"+f,$(f).value)});
+KOPF.forEach(f=>{$(f).value=ls.get("am_"+f,"");$(f).addEventListener("input",()=>{ls.set("am_"+f,$(f).value);kopfText()})});
 if(!$("datum").value){$("datum").value=heute();ls.set("am_datum",$("datum").value)}
 
+// ---------- Bereiche ----------
+const TITEL={1:["Aus Katalog","Aufmaß"],2:["Sonstiges","Sonstiges"],3:["Katalog","Katalog"]};
 function tab(n){
-  [1,2,3].forEach(i=>{$("p"+i).style.display=i==n?"":"none";$("t"+i).className=i==n?"akt":""});
-  document.body.classList.toggle("kat",n==3);
+  aktTab=n;
+  [1,2,3].forEach(i=>{$("p"+i).hidden=i!==n});
+  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("akt",+b.dataset.tab===n));
+  document.body.classList.toggle("kat",n===3);
+  $("p3b").hidden=n!==3;$("aufmass").hidden=n===3;$("lAktionen").hidden=n===3;$("rundPDF").hidden=n===3;
+  $("ltTitel").textContent=TITEL[n][0];$("hTitel").textContent=TITEL[n][1];
+  try{history.replaceState(null,"",n===1?location.pathname:"#"+["","","sonstiges","katalog"][n])}catch(e){}
+  kopfText();
 }
-$("sMerk").onchange=()=>$("sMerkBox").classList.toggle("an",$("sMerk").checked);
-let katVonHand=false;
-$("sKatg").onchange=()=>{katVonHand=true};
-$("sEinheit").oninput=()=>{if(!katVonHand)$("sKatg").value=katVonEinheit($("sEinheit").value)};
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{tab(+b.dataset.tab);if(window.innerWidth<900)scrollTo({top:0,behavior:"smooth"})}));
 
+// Auftragsdaten am Handy auf- und zuklappen
+function kopfText(){
+  const k=$("kunde").value.trim(),a=$("auftrag").value.trim(),nr=$("auftragsnr").value.trim(),p=$("person").value.trim(),d=datumDE($("datum").value);
+  $("kz1").textContent=[k,a].filter(Boolean).join(" · ")||"Auftragsdaten eintragen";
+  $("kz2").textContent=[d,nr?"Nr. "+nr:"",p].filter(Boolean).join(" · ");
+  $("ltSub").textContent=aktTab===3?"Materialliste verwalten – gilt nur für dieses Gerät":[k,a,d].filter(Boolean).join(" · ");
+}
+function kopfSetzen(offen){$("kopf").classList.toggle("offen",offen);$("kopfZu").setAttribute("aria-expanded",offen)}
+$("kopfZu").onclick=()=>kopfSetzen(!$("kopf").classList.contains("offen"));
+kopfSetzen(!$("kunde").value.trim());
+
+// ---------- Suche ----------
 function filtern(){
   const q=$("suche").value.toLowerCase().trim();
-  $("keinKat").style.display=alle().length?"none":"";
+  $("keinKat").hidden=alle().length>0;
   treffer=alle().filter(k=>(k[0]+" "+k[1]).toLowerCase().includes(q)).slice(0,200);
-  $("treffer").innerHTML=treffer.map((k,i)=>`<div class="opt${gewaehlt&&gewaehlt[0]==k[0]&&gewaehlt[1]==k[1]?" sel":""}" data-i="${i}"><span>${nrHtml(k[0])} · ${esc(k[1])}</span><span class="r">${esc(k[2])} · ${katVon(k[3],k[2])}</span></div>`).join("")
+  $("treffer").innerHTML=treffer.map((k,i)=>{const sel=gewaehlt&&gewaehlt[0]==k[0]&&gewaehlt[1]==k[1];return `<div class="opt${sel?" sel":""}" data-i="${i}" role="option" aria-selected="${sel}"><span>${nrHtml(k[0])} · ${esc(k[1])}</span><span class="r">${esc(k[2])} · ${katVon(k[3],k[2])}</span><span class="ok">${IC.haken}</span></div>`}).join("")
     ||'<div class="opt leer">Nichts gefunden – nutze „Sonstiges“</div>';
 }
 $("treffer").onclick=e=>{const el=e.target.closest(".opt[data-i]");if(!el)return;gewaehlt=treffer[+el.dataset.i];$("einheit").value=gewaehlt[2];filtern();$("menge").focus()};
 $("suche").oninput=filtern;
+$("menge").addEventListener("keydown",e=>{if(e.key==="Enter")hinzu()});
 
-const zahl=v=>parseFloat(String(v).replace(/\s/g,"").replace(",","."));
-function neuePos(p){p.t=Date.now()+Math.random();daten.push(p);zuletzt=p.t;speichern();zeigen()}
+// ---------- Positionen ----------
+function neuePos(p){p.t=Date.now()+Math.random();daten.push(p);zuletzt=p.t;speichern("aufmass",daten);zeigen()}
 function hinzu(){
   const m=zahl($("menge").value);
   if(!gewaehlt)return alert("Bitte ein Material antippen");
@@ -310,6 +223,9 @@ function hinzu(){
   $("menge").value="";$("bem").value="";
 }
 function naechsteENr(){const max=eigene.reduce((m,k)=>Math.max(m,parseInt(String(k[0]).slice(1))||0),0);return "E"+String(max+1).padStart(3,"0")}
+let katVonHand=false;
+$("sKatg").onchange=()=>{katVonHand=true};
+$("sEinheit").oninput=()=>{if(!katVonHand)$("sKatg").value=katVonEinheit($("sEinheit").value)};
 function sonst(){
   const n=$("sName").value.trim(),m=zahl($("sMenge").value),e=$("sEinheit").value.trim()||"Stk",kat=$("sKatg").value;
   if(!n)return alert("Bitte eine Bezeichnung eingeben");
@@ -318,17 +234,14 @@ function sonst(){
   if($("sMerk").checked){
     const vorhanden=alle().find(k=>k[1].toLowerCase()==n.toLowerCase()&&k[2]==e);
     if(vorhanden)nr=vorhanden[0];
-    else{nr=naechsteENr();eigene.push([nr,n,e,kat]);ls.set("am_eigene",eigene);katInfo();filtern()}
+    else{nr=naechsteENr();eigene.push([nr,n,e,kat]);speichern("am_eigene",eigene);katInfo();filtern()}
   }
   neuePos({nr,name:n,einheit:e,kat,menge:m,bem:$("sBem").value.trim()});
   ["sName","sMenge","sEinheit","sBem"].forEach(f=>$(f).value="");
-  $("sMerk").checked=false;$("sMerkBox").classList.remove("an");$("sKatg").value="Material";katVonHand=false;
+  $("sMerk").checked=false;$("sKatg").value="Material";katVonHand=false;
 }
-function speichern(){ls.set("aufmass",daten)}
-const fmt=n=>n.toLocaleString("de-DE",{maximumFractionDigits:3});
 
-// Sortierung: nach Kategorie, darin Artikelnummer (natürlich), dann E-Nummern, dann freie Einträge
-const rang=nr=>(!nr||nr==="–")?2:istENr(nr)?1:0;
+// Sortierung: Kategorie, dann Artikelnummer (natürlich), E-Nummern, freie Einträge
 function sortiert(){
   return daten.map((d,i)=>({...d,kat:katVon(d.kat,d.einheit),i})).sort((a,b)=>
     KATS.indexOf(a.kat)-KATS.indexOf(b.kat)||rang(a.nr)-rang(b.nr)||
@@ -338,17 +251,29 @@ function gruppiert(){const s=sortiert();return KATS.map(k=>({kat:k,pos:s.filter(
 function zeigen(){
   let n=0;
   $("anzahl").textContent=daten.length==1?"1 Position":daten.length+" Positionen";
-  $("liste").innerHTML=daten.length?gruppiert().map(g=>`<div class="grp"><b></b><span class="sec">${g.kat}</span><span class="n">${g.pos.length}</span></div>`+g.pos.map(d=>`<div class="pos${d.t&&d.t===zuletzt?" neu":""}"><div class="t"><div class="o">${++n} · ${nrHtml(d.nr)}</div><div class="b">${esc(d.name)}</div>${d.bem?`<div class="bem">${esc(d.bem)}</div>`:""}</div><div class="m">${fmt(d.menge)} ${esc(d.einheit)}</div><button class="del" data-i="${d.i}" aria-label="Position löschen">${ICON_DEL}</button></div>`).join("")).join("")
-    :'<div class="leerliste">Noch keine Positionen – füge links bzw. oben Material hinzu.</div>';
-  const neu=$("liste").querySelector(".pos.neu");if(neu&&neu.scrollIntoView)neu.scrollIntoView({block:"nearest",behavior:"smooth"});
+  $("liste").innerHTML=daten.length?gruppiert().map((g,gi)=>`<div class="cap"${gi===0?' style="margin-top:6px"':""}><span><i></i>${g.kat}</span><span class="cnt">${g.pos.length}</span></div><div class="glass karte liste">`
+    +g.pos.map(d=>`<div class="zeile${d.t&&d.t===zuletzt?" neu":""}" data-i="${d.i}"><div class="zinhalt"><div class="zt"><div class="zn">${esc(d.name)}</div><div class="zs">${++n} · ${d.nr&&d.nr!=="–"?nrHtml(d.nr):"ohne Nr."}${d.bem?" · "+esc(d.bem):""}</div></div><div class="zm">${fmt(d.menge)} ${esc(d.einheit)}</div></div>`
+      +`<div class="zaktion"><button class="za e" aria-label="Menge bearbeiten">${IC.stift}<span>Menge</span></button><button class="za d" aria-label="Position löschen">${IC.muell}<span>Löschen</span></button></div></div>`).join("")+`</div>`).join("")
+    :'<div class="glass karte"><div class="leer">Noch keine Positionen – füge Material hinzu.</div></div>';
+  const neuZ=$("liste").querySelector(".zeile.neu");if(neuZ&&neuZ.scrollIntoView&&window.innerWidth>=900)neuZ.scrollIntoView({block:"nearest",behavior:"smooth"});
   zuletzt=null;
 }
-$("liste").onclick=e=>{const b=e.target.closest("button.del");if(!b)return;daten.splice(+b.dataset.i,1);speichern();zeigen()};
+function mengeBearbeiten(i){
+  const d=daten[i];if(!d)return;
+  dialog({titel:"Menge ändern",text:d.name+(d.bem?" · "+d.bem:""),felder:[{id:"m",label:"Menge",wert:fmt(d.menge),zahl:true,einheit:d.einheit}],
+    knoepfe:[{label:"Speichern",klasse:"btn-blau",haupt:true,fn:w=>{const m=zahl(w.m);if(!(m>0)){alert("Bitte eine gültige Menge eingeben");return false}d.menge=m;zuletzt=d.t;speichern("aufmass",daten);zeigen()}},{label:"Abbrechen"}]});
+}
+function positionLoeschen(i){daten.splice(i,1);speichern("aufmass",daten);zeigen()}
+
+// Wischen nach links (Handy) zeigt „Menge“ und „Löschen“
+wischenAktivieren($("liste"));
+$("liste").addEventListener("click",e=>{const b=e.target.closest(".za");if(!b)return;const i=+b.closest(".zeile").dataset.i;if(b.classList.contains("e"))mengeBearbeiten(i);else positionLoeschen(i)});
+
 function neu(){
   if(daten.length&&!confirm("Das aktuelle Aufmaß (Liste, Kunde, Auftrag und Notizen) wird gelöscht.\n\nHast du das PDF gespeichert?"))return;
-  daten=[];speichern();zeigen();["kunde","auftragsnr","auftrag","notizen"].forEach(f=>{$(f).value="";ls.set("am_"+f,"")});
+  daten=[];speichern("aufmass",daten);zeigen();["kunde","auftragsnr","auftrag","notizen"].forEach(f=>{$(f).value="";ls.set("am_"+f,"")});
   $("datum").value=heute();ls.set("am_datum",$("datum").value);
-  aufmassId=neueId();ls.set("am_id",aufmassId);
+  aufmassId=neueId();ls.set("am_id",aufmassId);kopfText();kopfSetzen(true);
 }
 
 // ---------- CSV-Import ----------
@@ -368,23 +293,26 @@ function parseCSV(text){
   return rows.map(r=>r.map(x=>x.trim())).filter(r=>r.some(x=>x));
 }
 $("fileIn").onchange=async e=>{
-  const file=e.target.files[0];if(!file)return;
+  const file=e.target.files[0];e.target.value="";if(!file)return;
   try{
     let rows=parseCSV(decode(await file.arrayBuffer()));
     if(rows.length&&/art|nr|nummer/i.test(rows[0][0])&&/bez|name|material/i.test(rows[0][1]||""))rows.shift();
     const neuKat=rows.filter(r=>r[1]).map(r=>[r[0]||"",r[1],r[2]||"Stk",normKat(r[3])]);
     if(!neuKat.length)return alert("In der Datei wurden keine Materialien gefunden. Aufbau: Artikelnummer;Bezeichnung;Einheit;Kategorie");
+    // Erst speichern – passt die Liste nicht in den Gerätespeicher, bleibt der alte Katalog
+    if(!ls.set("am_katalog",neuKat)){
+      return alert("Die Liste ist zu groß für den Speicher dieses Geräts ("+neuKat.length.toLocaleString("de-DE")+" Artikel).\n\nSie wurde NICHT importiert – der bisherige Katalog bleibt erhalten.");
+    }
     const namen=new Set(neuKat.map(k=>k[1].toLowerCase()));
     const vorher=eigene.length;eigene=eigene.filter(k=>!namen.has(k[1].toLowerCase()));const entfernt=vorher-eigene.length;
     const mitKat=neuKat.filter(k=>k[3]).length;
     katalog=neuKat;katMeta={datei:file.name,datum:new Date().toLocaleString("de-DE"),anzahl:neuKat.length,mitKat};
-    ls.set("am_katalog",katalog);ls.set("am_katmeta",katMeta);ls.set("am_eigene",eigene);gewaehlt=null;
+    ls.set("am_katmeta",katMeta);ls.set("am_eigene",eigene);gewaehlt=null;
     katInfo();filtern();
-    alert(neuKat.length+" Materialien importiert ("+(mitKat==neuKat.length?"alle mit Kategorie":mitKat+" mit Kategorie, Rest nach Einheit zugeordnet")+")."
+    alert(neuKat.length.toLocaleString("de-DE")+" Materialien importiert ("+(mitKat==neuKat.length?"alle mit Kategorie":mitKat+" mit Kategorie, Rest nach Einheit zugeordnet")+")."
       +(entfernt?"\n"+entfernt+" eigene Materialien stehen jetzt im Katalog und wurden als eigene entfernt.":""));
     tab(1);
   }catch(err){alert("Datei konnte nicht gelesen werden: "+err.message)}
-  e.target.value="";
 };
 
 // ---------- CSV-Export ----------
@@ -398,46 +326,42 @@ function katExport(){
 }
 function katInfo(){
   const kd=katMeta?`${esc(katMeta.datei)} · ${esc(String(katMeta.datum).split(",")[0])}`:"noch nicht importiert";
-  $("katInfo").innerHTML=`<div class="stat"><div class="k">Katalog</div><div class="v">${katMeta?katMeta.anzahl:0}</div><div class="d">${kd}</div></div>`
-    +`<div class="stat gelb"><div class="k">Eigene (E-Nr.)</div><div class="v">${eigene.length}</div><div class="d">nur auf diesem Gerät</div></div>`;
+  $("katInfo").innerHTML=`<div class="glass stat"><div class="k">Materialien im Katalog</div><div class="v">${katMeta?katMeta.anzahl.toLocaleString("de-DE"):0}</div><div class="d">${kd}</div></div>`
+    +`<div class="glass stat gelb"><div class="k">Eigene (E-Nr.)</div><div class="v">${eigene.length}</div><div class="d">nur auf diesem Gerät</div></div>`;
 }
 function katalogLoeschen(){if(confirm("Den importierten Katalog von diesem Gerät löschen?\n\nEigene Materialien und das aktuelle Aufmaß bleiben erhalten.")){katalog=[];katMeta=null;ls.set("am_katalog",[]);ls.set("am_katmeta",null);gewaehlt=null;katInfo();filtern()}}
 function eigeneLoeschen(){
   if(!eigene.length)return alert("Es gibt keine eigenen Materialien auf diesem Gerät.");
-  if(confirm(eigene.length+" eigene Materialien (E-Nummern) von diesem Gerät löschen?\n\nTipp: Vorher „Katalog als CSV exportieren“, sonst sind sie weg.")){eigene=[];ls.set("am_eigene",[]);gewaehlt=null;katInfo();filtern()}
+  if(confirm(eigene.length+" eigene Materialien (E-Nummern) von diesem Gerät löschen?\n\nTipp: Vorher „Als CSV exportieren“, sonst sind sie weg.")){eigene=[];ls.set("am_eigene",[]);gewaehlt=null;katInfo();filtern()}
 }
+
+// ---------- Logo ----------
+function logoZeigen(){const l=logoHolen();$("logoVorschau").innerHTML=l?`<img src="${l.src}" alt="Firmenlogo">`:"kein Logo";$("logoWeg").hidden=!l}
+$("logoIn").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const l=await logoAusDatei(f);if(!ls.set(LOGO_KEY,l))return alert("Das Logo ist zu groß für den Speicher dieses Geräts.");logoZeigen()}catch(err){alert("Das Bild konnte nicht gelesen werden: "+err.message)}};
+function logoEntfernen(){if(confirm("Firmenlogo von diesem Gerät entfernen?")){localStorage.removeItem(LOGO_KEY);logoZeigen()}}
 
 // ---------- PDF + JSON ----------
 const kopfWerte=()=>Object.fromEntries(KOPF.map(f=>[f,$(f).value.trim()]));
-const datumDE=iso=>iso?new Date(iso+"T12:00").toLocaleDateString("de-DE"):"";
-const UML={"ä":"ae","ö":"oe","ü":"ue","Ä":"Ae","Ö":"Oe","Ü":"Ue","ß":"ss"};
-function dateiName(k){return ("Aufmass_"+(k.kunde||"Kunde")+"_"+(k.datum||"")+(k.person?"_"+k.person:"")).replace(/[äöüÄÖÜß]/g,c=>UML[c]).replace(/[^\w-]+/g,"_").replace(/_+/g,"_")}
-const BLAU=[22,50,92],GELB=[245,184,46];
-
+const dateiName=k=>dateiSauber("Aufmass_"+(k.kunde||"Kunde")+"_"+(k.datum||"")+(k.person?"_"+k.person:""));
 function bauePDF(k){
   const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
-  doc.setFontSize(18);doc.setTextColor(...BLAU);doc.text("Aufmaß",14,18);doc.setTextColor(0);
-  doc.setDrawColor(...GELB);doc.setLineWidth(1.2);doc.line(14,21,196,21);doc.setDrawColor(0);doc.setLineWidth(0.2);
-  doc.setFontSize(10);
+  pdfTitel(doc,"Aufmaß");
   const kopf=[["Datum",datumDE(k.datum)],["Kunde",k.kunde]];
   if(k.auftragsnr)kopf.push(["Auftragsnummer",k.auftragsnr]);
   kopf.push(["Auftrag / Baustelle",k.auftrag],["Aufgenommen von",k.person]);
   if(k.notizen)kopf.push(["Notizen",k.notizen]);
-  let y=29;kopf.forEach(([a,v])=>{doc.setFont(undefined,"bold");doc.text(a+":",14,y);doc.setFont(undefined,"normal");const z=doc.splitTextToSize(v||"",140);doc.text(z,55,y);y+=5*Math.max(1,z.length)+1});
+  const y=pdfKopfdaten(doc,kopf,29);
   const body=[];let n=0;
   gruppiert().forEach(g=>{
     body.push([{content:g.kat,colSpan:6,styles:{fillColor:[255,248,230],fontStyle:"bold",textColor:20}}]);
     g.pos.forEach(x=>body.push([++n,x.nr,x.name,fmt(x.menge),x.einheit,x.bem||""]));
   });
-  const folgeKopf=["Aufmaß",k.kunde,k.auftragsnr,k.auftrag,datumDE(k.datum)].filter(Boolean).join("  ·  ");
-  const folgeSeite=()=>{doc.setFontSize(8);doc.setTextColor(90);doc.text(doc.splitTextToSize(folgeKopf,182)[0],14,12);doc.setDrawColor(...GELB);doc.setLineWidth(0.6);doc.line(14,14,196,14);doc.setDrawColor(0);doc.setLineWidth(0.2);doc.setTextColor(0)};
+  const folge=["Aufmaß",k.kunde,k.auftragsnr,k.auftrag,datumDE(k.datum)].filter(Boolean).join("  ·  ");
   doc.autoTable({startY:y+2,margin:{top:20,bottom:18},head:[["Pos.","Art.-Nr.","Material / Leistung","Menge","Einheit","Bemerkung"]],body,
     showHead:"everyPage",styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:BLAU},columnStyles:{0:{cellWidth:11},3:{halign:"right"}},
-    didDrawPage:d=>{if(d.pageNumber>1)folgeSeite()}});
-  let ey=doc.lastAutoTable.finalY+25;if(ey>272){doc.addPage();ey=40;folgeSeite()}
-  doc.setLineWidth(0.2);doc.line(14,ey,90,ey);doc.line(115,ey,196,ey);doc.setFontSize(9);doc.text("Ort, Datum",14,ey+5);doc.text("Unterschrift Kunde",115,ey+5);
-  const seiten=doc.getNumberOfPages();
-  for(let i=1;i<=seiten;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120);doc.text("Seite "+i+" von "+seiten,196,290,{align:"right"});doc.setTextColor(0)}
+    didDrawPage:d=>{if(d.pageNumber>1)pdfFolgekopf(doc,folge)}});
+  pdfAbschluss(doc,folge);
   return doc.output("blob");
 }
 function baueJSON(k){
@@ -454,23 +378,15 @@ function erstellen(mitJson){
   if(mitJson)files.push(new File([baueJSON(k)],name+".json",{type:"application/json"}));
   teilen(files);
 }
-
-// ---------- Teilen / Speichern ----------
-// Handy: Teilen-Menü. PC: normaler Download.
-const istHandy=()=>matchMedia("(pointer:coarse)").matches||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-async function teilen(files){
-  if(istHandy()&&navigator.canShare&&navigator.canShare({files})){
-    try{await navigator.share({files});return}catch(e){if(e.name==="AbortError")return}
-  }
-  files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)},i*400));
+function pdfAuswahl(){
+  if(!daten.length)return alert("Die Liste ist noch leer.");
+  dialog({titel:"Aufmaß speichern",text:"PDF zum Abheften – PDF + JSON, wenn das Aufmaß später ins Abschlussaufmaß soll.",
+    knoepfe:[{label:"PDF erstellen",klasse:"btn-blau",fn:()=>{erstellen(false)}},{label:"PDF + JSON erstellen",klasse:"btn-gelb",fn:()=>{erstellen(true)}},{label:"Abbrechen"}]});
 }
 
-$("ver").textContent="Version "+VERSION+" · Daten bleiben nur auf diesem Gerät";
-katInfo();filtern();zeigen();
-if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
-  // Wenn eine neue Version installiert wurde, einmal automatisch neu laden
-  const hatteVersion=!!navigator.serviceWorker.controller;let neuGeladen=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hatteVersion&&!neuGeladen){neuGeladen=true;location.reload()}});
-  navigator.serviceWorker.register("sw.js").catch(()=>{});
-}
+// ---------- Start ----------
+document.querySelectorAll(".vtext").forEach(s=>s.textContent="Version "+VERSION);
+katInfo();filtern();zeigen();logoZeigen();
+tab(location.hash==="#katalog"?3:location.hash==="#sonstiges"?2:1);
+offlineAnmelden();
 </script></body></html>

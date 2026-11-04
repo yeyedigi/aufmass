@@ -1,7 +1,7 @@
 // Offline-Modus: speichert das Programm auf dem Gerät.
 // Bei jeder Änderung am Tool die Versionsnummer hier erhöhen.
-const CACHE = "aufmass-v1.4";
-const DATEIEN = ["./", "index.html", "summe.html", "manifest.json", "jspdf.min.js", "jspdf.autotable.min.js", "icon-180.png", "icon-512.png"];
+const CACHE = "aufmass-v1.5";
+const DATEIEN = ["./", "index.html", "summe.html", "glas.css", "basis.js", "manifest.json", "jspdf.min.js", "jspdf.autotable.min.js", "icon-180.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(DATEIEN.map(u => new Request(u, { cache: "reload" })))).then(() => self.skipWaiting()));

@@ -1,0 +1,247 @@
+/* Aufmaß – gemeinsames Design (Liquid Glass) für App und Abschlussaufmaß */
+:root{
+  --blau:#16325c;--blau-g:rgba(22,50,92,.9);--gelb:#f5b82e;--gelb-g:rgba(245,184,46,.92);
+  --text:#1a2233;--muted:#4a5466;--muted2:#5b6577;--rot:#c62828;--rot-t:#b3261e;--hair:rgba(26,34,51,.14)
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:#e9edf4;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}
+button{-webkit-tap-highlight-color:transparent;cursor:pointer}
+a{color:inherit;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+
+/* Hintergrund, der durch das Glas schimmert */
+.hg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.hg i{position:absolute;border-radius:50%;filter:blur(80px)}
+.hg .b1{width:380px;height:380px;left:-130px;top:-100px;background:var(--blau);opacity:.5}
+.hg .b2{width:320px;height:320px;right:-120px;top:38%;background:var(--gelb);opacity:.55}
+.hg .b3{width:340px;height:340px;left:-60px;bottom:-140px;background:#7fa6d9;opacity:.5}
+
+/* Glas */
+.glass{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border:1px solid rgba(255,255,255,.75);box-shadow:0 10px 30px rgba(22,50,92,.12),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.35)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:rgba(255,255,255,.9)}}
+
+/* Grundgerüst Handy */
+.app{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 116px)}
+.seite,.leiste{display:none}
+.handykopf{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 4px 0}
+.handykopf h1{margin:0;font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.handykopf .unter{font-size:14px;color:#3a4456;margin-top:2px}
+.pille{height:44px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:var(--blau);text-decoration:none;white-space:nowrap;border:1px solid rgba(255,255,255,.75)}
+.karte{border-radius:26px;overflow:hidden}
+.cap{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin:22px 18px 6px}
+.cap>span:first-child{display:flex;align-items:center;gap:8px}
+.cap i{width:5px;height:12px;border-radius:3px;background:var(--gelb)}
+.cap .cnt,.cap .chip{text-transform:none;letter-spacing:0;font-weight:600}
+.cap.rot{color:var(--rot-t)}
+.fuss{margin:7px 18px 0;font-size:13px;line-height:1.45;color:var(--muted)}
+.version{margin:28px 0 0;text-align:center;font-size:12px;color:var(--muted2)}
+
+/* Formulare – Handy: Zeilen wie in den iPhone-Einstellungen */
+.form .f{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 16px}
+.form .f+.f{border-top:.5px solid var(--hair)}
+.form .f>label{flex:none;font-size:16px;color:var(--text);max-width:48%}
+.form .in{flex:1;min-width:0;width:100%;border:0;background:transparent;text-align:right;font-size:16px;color:var(--muted);height:46px;padding:0;margin:0;-webkit-appearance:none;appearance:none;outline:none;border-radius:0}
+.form .in:focus{color:var(--text)}
+.form .in::placeholder{color:#8a93a3;font-weight:400}
+.form input[type=date].in{min-width:0}
+.form input[type=date].in::-webkit-date-and-time-value{text-align:right}
+.form select.in{text-align-last:right;padding-right:22px;color:var(--blau);font-weight:600;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='16' viewBox='0 0 12 16' fill='none' stroke='%2316325c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6l4-4 4 4M2 10l4 4 4-4'/%3E%3C/svg%3E") no-repeat right center}
+.form .f.lang{flex-direction:column;align-items:stretch;gap:2px;padding:10px 16px}
+.form .f.lang .in{text-align:left;height:auto;min-height:44px;resize:vertical;line-height:1.4;color:var(--text)}
+.form .f.ro .in{color:var(--muted2)}
+.form .einh{flex:none;font-size:15px;color:var(--muted2)}
+.form .f.schalt{min-height:60px}
+.form .f.schalt>label{max-width:none;flex:1}
+.form .f.schalt small{display:block;font-size:13px;color:var(--muted)}
+
+/* iPhone-Schalter */
+input.schalter{-webkit-appearance:none;appearance:none;width:52px;height:32px;border-radius:999px;background:rgba(120,120,128,.32);position:relative;flex:none;margin:0;cursor:pointer;transition:background .2s;border:0}
+input.schalter::after{content:"";position:absolute;left:2px;top:2px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .2s}
+input.schalter:checked{background:var(--blau)}
+input.schalter:checked::after{transform:translateX(20px)}
+input.schalter:focus-visible{outline:3px solid rgba(245,184,46,.7);outline-offset:2px}
+
+/* Auftragsdaten (am Handy aufklappbar) */
+.kopf{margin-top:16px}
+.kopfzu{display:flex;width:100%;align-items:center;gap:12px;padding:10px 16px;min-height:60px;border:0;background:transparent;text-align:left;color:var(--text)}
+.kopfzu .bar{width:6px;height:32px;border-radius:3px;background:var(--gelb);flex:none}
+.kopfzu .tt{flex:1;min-width:0}
+.kopfzu .t1{display:block;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kopfzu .t2{display:block;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kopfzu svg{flex:none;transition:transform .2s}
+.kopf.offen .kopfzu{border-bottom:.5px solid var(--hair)}
+.kopf.offen .kopfzu svg{transform:rotate(180deg)}
+.kopf .kopfinhalt{display:none}
+.kopf.offen .kopfinhalt{display:block}
+.kcap{display:none}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border-radius:999px;border:1px solid rgba(255,255,255,.4);font-size:16px;font-weight:600;padding:8px 18px;text-decoration:none;text-align:center;color:var(--text);background:transparent;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-blau{background:var(--blau-g);color:#fff;box-shadow:0 10px 24px rgba(22,50,92,.25),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-gelb{background:var(--gelb-g);color:var(--text);font-weight:700;border-color:rgba(255,255,255,.55);box-shadow:0 10px 24px rgba(180,120,0,.2),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn-glas{color:var(--blau)}
+.btn-rot{color:var(--rot-t)}
+.btn.zwei{flex-direction:column;gap:1px}
+.btn small{display:block;font-size:12px;font-weight:500}
+@media (hover:hover){.btn:hover{filter:brightness(.96)}}
+.mt{margin-top:14px}
+.zweier{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.zweier .ganz{grid-column:1/-1}
+
+/* Suche */
+.suche{height:48px;border-radius:999px;display:flex;align-items:center;gap:10px;padding:0 16px}
+.suche input{flex:1;min-width:0;border:0;background:transparent;font-size:16px;color:var(--text);outline:none;height:46px;padding:0;-webkit-appearance:none;appearance:none}
+.suche input::placeholder{color:#6b7484}
+.suche:focus-within{box-shadow:0 0 0 3px rgba(245,184,46,.55),0 10px 30px rgba(22,50,92,.12)}
+.treffer{margin-top:10px;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:8px 16px;cursor:pointer;font-size:15px}
+.opt+.opt{border-top:.5px solid var(--hair)}
+.opt .r{font-size:13px;color:var(--muted);white-space:nowrap}
+.opt.sel{background:var(--blau-g);color:#fff;font-weight:600}
+.opt.sel .r{color:#fff;opacity:.85}
+.opt .ok{display:none}
+.opt.sel .ok{display:block}
+.opt.leer{color:var(--muted);cursor:default}
+@media (hover:hover){.opt:not(.sel):not(.leer):hover{background:rgba(255,255,255,.55)}}
+.enr{background:var(--gelb);color:var(--text);font-weight:700;padding:1px 6px;border-radius:6px}
+.hinweis{border-radius:18px;padding:12px 14px;font-size:14px;line-height:1.45;margin-bottom:12px;background:rgba(255,240,200,.75);border:1px solid rgba(245,184,46,.7)}
+.hinweis.rot{background:rgba(253,236,234,.85);border-color:rgba(229,115,115,.6)}
+.hinweis.gruen{background:rgba(232,245,236,.85);border-color:rgba(120,190,145,.6)}
+.hinweis:empty{display:none}
+
+/* Listen mit Wischen (Handy) bzw. Stift/Papierkorb beim Überfahren (PC) */
+.liste .zeile{position:relative;overflow:hidden}
+.liste .zeile+.zeile{border-top:.5px solid var(--hair)}
+.zinhalt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 16px;transition:transform .22s ease;position:relative;z-index:1}
+.zt{flex:1;min-width:0}
+.zn{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.zs{font-size:13px;color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
+.zm{font-size:16px;font-weight:600;white-space:nowrap;text-align:right}
+.zm small{display:block;font-size:11px;font-weight:600;color:#8a6200}
+.zaktion{position:absolute;right:0;top:0;bottom:0;display:flex;transform:translateX(100%);transition:transform .22s ease;z-index:2}
+.za{width:75px;border:0;color:#fff;font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0}
+.za.e{background:var(--blau)}
+.za.d{background:#d93025}
+.zeile.offen .zinhalt{transform:translateX(-150px)}
+.zeile.offen .zaktion{transform:none}
+.zeile.neu{animation:blink 1.8s ease-out}
+.zeile.abw{background:rgba(229,115,115,.14);box-shadow:inset 4px 0 0 #e57373}
+.zeile.korr{background:rgba(255,240,200,.45)}
+@keyframes blink{0%,45%{background:rgba(245,184,46,.45)}100%{background:transparent}}
+.leer{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
+.summe{display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:48px;padding:8px 16px;background:rgba(22,50,92,.08);font-weight:700;border-top:.5px solid var(--hair)}
+.chip{font-size:12px;font-weight:600;color:#2a3344;background:rgba(22,50,92,.08);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.warnung{display:inline-block;margin-top:3px;font-size:12.5px;font-weight:600;color:var(--rot-t)}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:#7a5600;background:rgba(245,184,46,.35);padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:1px}
+
+/* Katalog-Bereich */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.stat{border-radius:22px;padding:14px 16px;min-width:0}
+.stat.gelb{background:rgba(255,240,200,.6)}
+.stat .k{font-size:13px;color:var(--muted)}
+.stat .v{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.stat .d{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.item{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;width:100%;border:0;background:transparent;text-align:left;color:var(--text)}
+.item+.item{border-top:.5px solid var(--hair)}
+.ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+.item .t{display:block;font-size:16px;font-weight:600}
+.item .d{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin-top:2px}
+.item.rot .t{color:var(--rot)}
+@media (hover:hover){.item:hover{background:rgba(255,255,255,.4)}}
+.gefahr{border-color:rgba(229,115,115,.5)}
+.logozeile{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.logovorschau{width:130px;height:48px;border-radius:10px;background:rgba(255,255,255,.7);border:1px dashed rgba(26,34,51,.2);display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;font-size:11px;color:var(--muted2);text-align:center}
+.logovorschau img{width:100%;height:100%;object-fit:contain;padding:4px}
+.logoknoepfe{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.logoknoepfe .btn{width:auto;min-height:40px;font-size:14px;padding:6px 14px}
+.dropzone{border:2px dashed rgba(22,50,92,.25);border-radius:18px;padding:16px;text-align:center;font-size:14px;color:var(--muted);line-height:1.5;background:rgba(255,255,255,.35);cursor:pointer}
+.dropzone b{color:var(--text)}
+.dropzone.ueber{border-color:var(--gelb);background:rgba(255,240,200,.6)}
+
+/* Schwebende Leiste unten (Handy) */
+.tableiste{position:fixed;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 14px);z-index:20;display:flex;gap:10px;align-items:center;max-width:728px;margin:0 auto}
+.tabs{flex:1;height:64px;border-radius:999px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:5px;gap:2px}
+.tabs button{border:0;border-radius:999px;background:transparent;color:#3a4456;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:500}
+.tabs button.akt{background:rgba(22,50,92,.12);color:var(--blau);font-weight:600}
+.rund{width:64px;height:64px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:var(--blau)}
+.unterleiste{flex:1;height:64px;border-radius:999px;padding:7px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.unterleiste .btn{min-height:0;height:100%}
+
+/* Seitenleiste + Werkzeugleiste (PC) */
+.seite .brand{display:flex;align-items:center;gap:10px;padding:4px 12px}
+.seite .brand span:first-child{width:7px;height:24px;border-radius:4px;background:var(--gelb)}
+.seite .brand b{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.ncap{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted2);text-transform:uppercase;margin:18px 12px 6px}
+.nav{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:12px;font-size:14px;font-weight:500;color:#2a3344;border:0;background:transparent;width:100%;text-align:left;text-decoration:none}
+.nav.akt{background:var(--blau-g);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 var(--gelb)}
+@media (hover:hover){.nav:not(.akt):hover{background:rgba(255,255,255,.5)}}
+.seite .sfuss{margin-top:auto;padding:0 12px;font-size:11px;line-height:1.5;color:var(--muted2)}
+.leiste .lt{font-size:19px;font-weight:700}
+.leiste .ls{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leiste .laktionen{display:flex;gap:8px;flex:none}
+.leiste .btn{width:auto;min-height:44px;font-size:14px;padding:0 18px}
+
+/* Dialog (Bearbeiten, Auswahl) */
+.sheet-hg{position:fixed;inset:0;z-index:50;background:rgba(15,25,45,.3);display:flex;align-items:flex-end;justify-content:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
+.sheet{width:100%;max-width:440px;border-radius:30px;padding:20px 16px 16px;background:rgba(246,248,252,.82)}
+.sheet h3{margin:0 6px 4px;font-size:19px;font-weight:700}
+.sheet p{margin:0 6px 12px;font-size:14px;color:var(--muted);line-height:1.45}
+.sheet .sform{margin-bottom:14px;background:rgba(255,255,255,.75)}
+.sheet .sbtns{display:grid;gap:8px}
+
+/* ---------- PC / Tablet quer ---------- */
+@media (min-width:900px){
+  .hg i{filter:blur(120px)}
+  .hg .b1{width:640px;height:640px;left:-200px;top:-220px}
+  .hg .b2{width:540px;height:540px;right:80px;top:30%}
+  .hg .b3{width:560px;height:560px;left:40%;bottom:-320px}
+  .app{max-width:1440px;padding:16px 16px 24px 280px}
+  .seite{display:flex;flex-direction:column;position:fixed;left:16px;top:16px;bottom:16px;width:248px;border-radius:26px;padding:18px 12px;z-index:10}
+  .leiste{display:flex;position:sticky;top:16px;z-index:9;height:64px;border-radius:999px;align-items:center;justify-content:space-between;gap:16px;padding:0 10px 0 26px}
+  .leiste>div:first-child{min-width:0}
+  .handykopf,.tableiste,.nurhandy,.version{display:none!important}
+  .kopf{margin-top:16px;border-radius:24px}
+  .kopfzu{display:none}
+  .kopf .kopfinhalt{display:block!important;padding:16px 20px 18px}
+  .kcap{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+  .kcap span{text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted2)}
+  .form.fgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px 14px}
+  .form.fgrid.drei{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .form.fgrid .f{display:block;min-height:0;padding:0;border:0}
+  .form.fgrid .f>label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;max-width:none}
+  .form.fgrid .in{display:block;width:100%;height:40px;border-radius:12px;background:rgba(255,255,255,.62);border:1px solid rgba(26,34,51,.12);padding:0 12px;text-align:left;text-align-last:auto;font-size:14px;color:var(--text);font-weight:500}
+  .form.fgrid input[type=date].in::-webkit-date-and-time-value{text-align:left}
+  .form.fgrid select.in{background-position:right 12px center;padding-right:30px}
+  .form.fgrid .in:focus{border-color:var(--blau);box-shadow:0 0 0 3px rgba(245,184,46,.5)}
+  .form.fgrid .f.lang .in{height:40px;min-height:40px;padding:9px 12px;resize:none}
+  .form.fgrid .f.ro .in{color:var(--muted2);background:rgba(255,255,255,.4)}
+  .form.fgrid .f.schalt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,240,200,.55);border:1px solid rgba(245,184,46,.55)}
+  .form.fgrid .f.schalt>label{margin:0;font-size:14px;color:var(--text)}
+  .form.fgrid .einh{display:none}
+  .w1{grid-column:span 1}.w2{grid-column:span 2}.w3{grid-column:span 3}.w4{grid-column:span 4}.wall{grid-column:1/-1}
+  .panel{border-radius:24px;padding:18px 20px}
+  .panel .pcap{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin:0 0 12px}
+  .spalten{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:16px;align-items:start;margin-top:16px}
+  .rechts{position:sticky;top:96px}
+  .scrollbox{max-height:calc(100vh - 200px);overflow-y:auto;border-radius:24px;padding-right:2px}
+  .spalten .cap{margin:18px 6px 8px}
+  .spalten .links>.cap:first-child,.spalten .rechts .cap.oben{margin-top:0}
+  .zweier.nurhandy{display:none}
+  .panel .form.glass{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:0}
+  .sheet-hg{align-items:center}
+  /* Am PC: Stift + Papierkorb erscheinen beim Überfahren */
+  .liste .zeile{display:flex;align-items:center}
+  .zinhalt{flex:1;transform:none!important;min-height:48px;padding:6px 16px}
+  .zaktion{position:static;transform:none!important;gap:6px;padding-right:12px;opacity:0;transition:opacity .15s}
+  .liste .zeile:hover .zaktion,.liste .zeile:focus-within .zaktion{opacity:1}
+  .za{width:32px;height:32px;border-radius:50%;gap:0}
+  .za span{display:none}
+  .za.e{background:rgba(22,50,92,.1);color:var(--blau)}
+  .za.d{background:rgba(217,48,37,.12);color:var(--rot)}
+  .zn{font-size:14.5px}.zs{font-size:12.5px}.zm{font-size:14.5px}
+  .stats{margin-top:0}
+}
+@media (min-width:900px) and (hover:none){.zaktion{opacity:1}}
